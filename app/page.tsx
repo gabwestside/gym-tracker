@@ -1,12 +1,9 @@
-import { Button } from "@/components/ui/button";
+import { WorkoutCalendar } from "@/components/workout-calendar";
 
 export default function Home() {
   return (
-    <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100 gap-2'>
-      <h1>Hello World!</h1>
-      <Button>
-        Click Me
-      </Button>
-    </div>
+    <main className="min-h-screen flex justify-center items-start pt-10">
+      <WorkoutCalendar />
+    </main>
   )
 }
