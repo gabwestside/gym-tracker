@@ -3,25 +3,25 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import { toast } from 'sonner'
 
 export default function LoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
   const handleLogin = async () => {
     setLoading(true)
-    setError('')
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     })
 
     if (error) {
-      setError(error.message)
+      toast.error('Erro ao logar: ' + error.message)
     } else {
+      toast.info('Login realizado com sucesso! Seja bem vindo. 💪')
       router.push('/dashboard')
     }
 
@@ -48,7 +48,7 @@ export default function LoginPage() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        {error && <p className='mb-2 text-sm text-red-600'>{error}</p>}
+        {/* {error && <p className='mb-2 text-sm text-red-600'>{error}</p>} */}
 
         <button
           onClick={handleLogin}
