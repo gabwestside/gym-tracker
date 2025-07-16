@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import { toast } from 'sonner'
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL
 
@@ -10,12 +11,11 @@ export default function RegisterPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
   const handleRegister = async () => {
     setLoading(true)
-    setError('')
+    
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -25,8 +25,9 @@ export default function RegisterPage() {
     })
 
     if (error) {
-      setError(error.message)
+      toast.error('Erro ao registrar: ' + error.message)
     } else {
+      toast.success('Conta criada! Verifique seu e-mail.')
       router.push('/verify')
     }
 
@@ -52,9 +53,7 @@ export default function RegisterPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-
-        {error && <p className='mb-2 text-sm text-red-600'>{error}</p>}
-
+        
         <button
           onClick={handleRegister}
           className='w-full rounded bg-green-600 px-4 py-2 font-semibold text-white hover:bg-green-700 disabled:opacity-50'
