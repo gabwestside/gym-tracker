@@ -13,15 +13,17 @@ export default function DashboardPage() {
     const fetchSession = async () => {
       const { data } = await supabase.auth.getSession()
       setSession(data.session)
-
+      
       if (!data.session) {
         router.push('/login')
+      } else if (!data.session.user.email_confirmed_at) {
+        router.push('/verify')
       }
     }
 
     fetchSession()
   }, [router])
-
+  
   const handleLogout = async () => {
     await supabase.auth.signOut()
     router.push('/login')

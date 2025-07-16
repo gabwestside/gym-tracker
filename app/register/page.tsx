@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL
+
 export default function RegisterPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
@@ -17,12 +19,15 @@ export default function RegisterPage() {
     const { error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        emailRedirectTo: `${baseUrl}/confirmed`,
+      },
     })
 
     if (error) {
       setError(error.message)
     } else {
-      router.push('/dashboard')
+      router.push('/verify')
     }
 
     setLoading(false)
@@ -57,6 +62,13 @@ export default function RegisterPage() {
         >
           {loading ? 'Registrando...' : 'Criar conta'}
         </button>
+
+        <p className='mt-4 text-sm text-center'>
+          Já tem conta?{' '}
+          <a href='/login' className='text-blue-600 hover:underline'>
+            Faça seu login
+          </a>
+        </p>
       </div>
     </main>
   )
