@@ -9,7 +9,8 @@ import { WorkoutCalendar } from '@/components/workout-calendar'
 import { Session } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { LogOutIcon } from 'lucide-react'
+import { LogOutIcon, PlusIcon } from 'lucide-react'
+import { Loading } from '@/components/loading'
 
 type Workout = {
   id: string
@@ -21,9 +22,12 @@ type Workout = {
 
 export default function DashboardPage() {
   const [workouts, setWorkouts] = useState<Workout[]>([])
+  const [hasWorkoutDays, setHasWorkoutDays] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const [session, setSession] = useState<Session | null>(null)
   const router = useRouter()
+
+  console.log('Workouts:', workouts)
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -65,16 +69,29 @@ export default function DashboardPage() {
         setWorkouts(data)
       }
 
+      setHasWorkoutDays(
+        data?.map((w) => dayjs(w.date).format('YYYY-MM-DD')) || []
+      )
       setLoading(false)
     }
 
     fetchWorkouts()
   }, [])
 
-  if (loading) return <p className='p-4 text-center'>Carregando treinos...</p>
+  const handleAddWorkout = () => {
+    router.push('/new')
+  }
+
+  if (loading) {
+    return <Loading />
+  }
 
   if (workouts.length === 0) {
-    return <p className='p-4 text-center'>Nenhum treino registrado ainda.</p>
+    return (
+      <div className='max-w-3xl mx-auto p-4 space-y-4'>
+        <p className='p-4 text-center'>Nenhum treino registrado ainda.</p>
+      </div>
+    )
   }
 
   return (
@@ -82,10 +99,10 @@ export default function DashboardPage() {
       <h1 className='mb-4 text-xl font-bold'>
         Bem-vindo, {session?.user?.email || 'Usuário'} 💪
       </h1>
-      
+
       <h2 className='font-bold mb-4'>Seus Treinos</h2>
 
-      <WorkoutCalendar />
+      <WorkoutCalendar hasWorkoutDays={hasWorkoutDays} />
 
       {workouts.map((workout) => (
         <div key={workout.id} className='rounded-lg border p-4 shadow-sm'>
@@ -109,8 +126,16 @@ export default function DashboardPage() {
       ))}
 
       <Button
+        onClick={handleAddWorkout}
+        className='mt-2 w-full rounded bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-700'
+      >
+        <PlusIcon />
+        Adicionar Treino
+      </Button>
+
+      <Button
         onClick={handleLogout}
-        className='mt-2 w-full rounded bg-red-600 px-4 py-2 text-white hover:bg-red-700'
+        className='w-full rounded bg-red-600 px-4 py-2 text-white hover:bg-red-700'
       >
         <LogOutIcon />
         Sair

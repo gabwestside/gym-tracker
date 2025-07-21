@@ -55,7 +55,7 @@ export default function NewWorkoutPage() {
       toast.error('Erro ao salvar treino.')
     } else {
       toast.success('Treino registrado com sucesso!')
-      router.push('/dashboard') // ou outra rota de sua preferência
+      router.push('/dashboard')
     }
   }
 
@@ -85,6 +85,7 @@ export default function NewWorkoutPage() {
           onChange={(e) => setImage(e.target.files?.[0] || null)}
         />
         <Button type='submit'>Salvar Treino</Button>
+        <Button variant='outline' className='ml-2' onClick={() => router.back()}>Cancelar</Button>
       </form>
     </div>
   )
