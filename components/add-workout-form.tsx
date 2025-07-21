@@ -3,6 +3,7 @@
 
 import { useState } from 'react'
 import { format } from 'date-fns'
+import Image from 'next/image'
 
 export type Workout = {
   id: string
@@ -63,7 +64,7 @@ export function AddWorkoutForm({
       <input type='file' accept='image/*' onChange={handleImageChange} />
 
       {image && (
-        <img
+    <Image
           src={image}
           alt='Prévia'
           className='w-32 h-32 object-cover rounded border border-zinc-300'
