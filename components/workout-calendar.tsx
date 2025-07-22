@@ -23,8 +23,9 @@ export const WorkoutCalendar = ({ hasWorkoutDays }: WorkoutProps) => {
         modifiers={{
           selected: doneWorkoutDays,
         }}
-        onDayClick={() => {}} 
-        className='!w-full'
+        onDayClick={() => {}}
+        disabled
+        className='!w-full flex justify-center'
         showOutsideDays
       />
     </div>

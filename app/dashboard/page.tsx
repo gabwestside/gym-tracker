@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { toast } from 'sonner'
 import dayjs from 'dayjs'
-import Image from 'next/image'
 import { WorkoutCalendar } from '@/components/workout-calendar'
 import { Session } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
@@ -12,8 +11,10 @@ import { Button } from '@/components/ui/button'
 import { LogOutIcon, PlusIcon } from 'lucide-react'
 import { Loading } from '@/components/loading'
 import { ThemeToggle } from '@/components/theme-toggle'
+import { WorkoutCard } from '@/components/workout-card'
+import { WorkoutModal } from '@/components/workout-modal'
 
-type Workout = {
+export type Workout = {
   id: string
   date: string
   time: string
@@ -27,6 +28,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [session, setSession] = useState<Session | null>(null)
   const router = useRouter()
+  const { user } = session || {}
 
   useEffect(() => {
     const initialize = async () => {
@@ -87,6 +89,7 @@ export default function DashboardPage() {
         <PlusIcon />
         Adicionar Treino
       </Button>
+
       <Button
         onClick={handleLogout}
         className='w-full rounded bg-red-600 px-4 py-2 text-white hover:bg-red-700'
@@ -97,8 +100,33 @@ export default function DashboardPage() {
     </div>
   )
 
+  const [isEditing, setIsEditing] = useState<Workout | null>(null)
+
+  const handleDeleteWorkout = () => {
+    const confirmed = window.confirm(
+      'Tem certeza que deseja deletar esse treino?'
+    )
+
+    if (!confirmed) return
+
+    setWorkouts((prev) => prev.filter((t) => t.id !== user?.id))
+    toast.success('Treino deletado com sucesso!')
+  }
+
+  const handleEditWorkout = (workout: Workout) => {
+    setIsEditing(workout)
+    router.push('/new')
+  }
+
   return (
-    <div className='max-w-3xl mx-auto p-4 space-y-4'>
+    <div className='max-w-sm mx-auto p-4 space-y-4'>
+      <WorkoutModal
+      
+        trigger={isEditing ? true : false}
+        workoutToEdit={isEditing}
+        onCompleted={() => fetchWorkouts(user?.id || '')}
+      />
+
       {loading && <Loading />}
 
       <div className='flex justify-between items-center mb-4'>
@@ -111,36 +139,14 @@ export default function DashboardPage() {
       </div>
 
       <h2 className='font-bold mb-4'>Seus Treinos</h2>
+
       <WorkoutCalendar hasWorkoutDays={hasWorkoutDays} />
 
-      {workouts.length === 0 ? (
-        <div className='rounded-lg border p-4 shadow-sm bg-green-100'>
-          <p className='p-4 text-base mb-2 text-center'>
-            Nenhum treino registrado ainda.
-          </p>
-        </div>
-      ) : (
-        workouts.map((workout) => (
-          <div key={workout.id} className='rounded-lg border p-4 shadow-sm'>
-            <div className='flex justify-between items-center mb-2'>
-              <span className='text-sm text-muted-foreground'>
-                {dayjs(workout.date).format('DD/MM/YYYY')}
-                {workout.time && ` às ${workout.time}`}
-              </span>
-            </div>
-            {workout.note && <p className='text-base mb-2'>{workout.note}</p>}
-            {workout.image_url && (
-              <Image
-                src={workout.image_url}
-                alt='Foto do treino'
-                className='rounded-md w-full max-h-72 object-cover'
-                width={800}
-                height={600}
-              />
-            )}
-          </div>
-        ))
-      )}
+      <WorkoutCard
+        workouts={workouts}
+        onDelete={handleDeleteWorkout}
+        onEdit={(workout) => handleEditWorkout(workout)}
+      />
 
       <ActionButtons />
     </div>
