@@ -46,7 +46,6 @@ export function AddWorkoutForm({
     setType('')
     setImage(null)
   }
-  
 
   return (
     <form onSubmit={handleSubmit} className='space-y-4 p-4'>
@@ -64,7 +63,7 @@ export function AddWorkoutForm({
       <input type='file' accept='image/*' onChange={handleImageChange} />
 
       {image && (
-    <Image
+        <Image
           src={image}
           alt='Prévia'
           className='w-32 h-32 object-cover rounded border border-zinc-300'

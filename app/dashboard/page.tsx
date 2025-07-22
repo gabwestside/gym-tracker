@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { LogOutIcon, PlusIcon } from 'lucide-react'
 import { Loading } from '@/components/loading'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 type Workout = {
   id: string
@@ -95,15 +96,19 @@ export default function DashboardPage() {
       </Button>
     </div>
   )
-  
 
   return (
     <div className='max-w-3xl mx-auto p-4 space-y-4'>
       {loading && <Loading />}
-      
-      <h1 className='mb-4 text-xl font-bold'>
-        Bem-vindo, {session?.user?.email || 'Usuário'}
-      </h1>
+
+      <div className='flex justify-between items-center mb-4'>
+        <h1 className='mb-4 text-xl font-bold'>
+          Bem-vindo, {session?.user?.email || 'Usuário'}
+        </h1>
+        <div className='flex justify-end p-4'>
+          <ThemeToggle />
+        </div>
+      </div>
 
       <h2 className='font-bold mb-4'>Seus Treinos</h2>
       <WorkoutCalendar hasWorkoutDays={hasWorkoutDays} />
