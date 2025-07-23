@@ -78,7 +78,9 @@ export default function DashboardPage() {
   }
 
   const handleAddWorkout = () => {
-    router.push('/new')
+    setIsEditing(null)
+    setIsDeleting(null)
+    setIsOpen(true)
   }
 
   const ActionButtons = () => (
@@ -102,14 +104,10 @@ export default function DashboardPage() {
   )
 
   const [isEditing, setIsEditing] = useState<Workout | null>(null)
-  
+  const [isDeleting, setIsDeleting] = useState<Workout | null>(null)
+  const [isOpen, setIsOpen] = useState(false)
+
   const handleDeleteWorkout = async (workout: Workout) => {
-    const confirmed = window.confirm(
-      'Tem certeza que deseja deletar esse treino?'
-    )
-
-    if (!confirmed) return
-
     const { error } = await supabase
       .from('workouts')
       .delete()
@@ -126,23 +124,28 @@ export default function DashboardPage() {
     }
   }
 
-  const handleEditWorkout = (workout: Workout) => {
-    setIsEditing(workout)
-    router.push('/new')
+  const handleEditWorkout = () => {
+    setWorkouts((prev) => prev.filter((t) => t.id !== isEditing?.id))
+    setIsEditing(null)
+    setLoading(true)
+    fetchWorkouts(user?.id || '')
   }
 
   return (
     <div className='max-w-sm mx-auto p-4 space-y-4'>
       <WorkoutModal
-        trigger={isEditing ? true : false}
+        open={isOpen}
+        onOpenChange={setIsOpen}
         workoutToEdit={isEditing}
-        onCompleted={() => fetchWorkouts(user?.id || '')}
+        onCompleted={handleEditWorkout}
       />
 
       <ConfirmationAlert
-        open={!!isEditing}
+        open={!!isDeleting}
         title='Tem certeza que deseja deletar esse treino?'
         description='Essa ação não pode ser desfeita.'
+        onCompleted={() => handleDeleteWorkout(isDeleting!)}
+        onCancel={() => setIsDeleting(null)}
       />
 
       {loading && <Loading />}
@@ -162,8 +165,11 @@ export default function DashboardPage() {
 
       <WorkoutCard
         workouts={workouts}
-        onDelete={(workout) => handleDeleteWorkout(workout)}
-        onEdit={(workout) => handleEditWorkout(workout)}
+        onDelete={(workout) => setIsDeleting(workout)}
+        onEdit={(workout) => {
+          setIsEditing(workout)
+          setIsOpen(true)
+        }}
       />
 
       <ActionButtons />

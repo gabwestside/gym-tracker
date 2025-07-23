@@ -19,7 +19,7 @@ export function UploadButton({ onUpload }: UploadButtonProps) {
     if (!file) return
 
     setUploading(true)
-    toast.info('Uploading image...')
+    toast.info('Enviando imagem...')
 
     try {
       const fileExt = file.name.split('.').pop()
@@ -27,20 +27,20 @@ export function UploadButton({ onUpload }: UploadButtonProps) {
       const filePath = `workouts/${fileName}`
 
       const { error } = await supabase.storage
-        .from('images') // nome do bucket
+        .from('workout-photos')
         .upload(filePath, file)
 
       if (error) throw error
 
       const { data } = supabase.storage.from('images').getPublicUrl(filePath)
-      if (!data?.publicUrl) throw new Error('Failed to retrieve public URL')
+      if (!data?.publicUrl) throw new Error('Falha ao obter a URL pública')
 
-      toast.success('Image uploaded successfully!')
+      toast.success('Imagem enviada com sucesso!')
       onUpload(data.publicUrl)
     } catch (error: unknown) {
       const errorMessage =
-        error instanceof Error ? error.message : 'An unknown error occurred'
-      toast.error(`Upload failed: ${errorMessage}`)
+        error instanceof Error ? error.message : 'Um erro desconhecido ocorreu.'
+      toast.error(`Falha no envio: ${errorMessage}`)
     } finally {
       setUploading(false)
     }
@@ -49,19 +49,19 @@ export function UploadButton({ onUpload }: UploadButtonProps) {
   return (
     <>
       <input
-        type="file"
-        accept="image/*"
-        className="hidden"
+        type='file'
+        accept='image/*'
+        className='hidden'
         ref={fileInputRef}
         onChange={handleFileChange}
       />
       <Button
-        type="button"
+        type='button'
         onClick={() => fileInputRef.current?.click()}
         disabled={uploading}
-        variant="outline"
+        variant='outline'
       >
-        {uploading ? 'Uploading...' : 'Upload Image'}
+        {uploading ? 'Enviar...' : 'Enviar Imagem'}
       </Button>
     </>
   )

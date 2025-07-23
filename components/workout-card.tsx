@@ -40,11 +40,15 @@ export function WorkoutCard({
             />
           )}
 
-          <div className='flex justify-end gap-2'>
+          <div className='flex justify-end gap-2 mt-2'>
             <Button variant='ghost' size='icon' onClick={() => onEdit(workout)}>
               <Pencil className='w-4 h-4' />
             </Button>
-            <Button variant='ghost' size='icon' onClick={() => onDelete(workout)}>
+            <Button
+              variant='ghost'
+              size='icon'
+              onClick={() => onDelete(workout)}
+            >
               <Trash className='w-4 h-4 text-red-500' />
             </Button>
           </div>
