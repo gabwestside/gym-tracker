@@ -168,3 +168,9 @@
     transform: translateY(-10px);
   }
 }
+
+.image-hover:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: all 0.2s;
+}

@@ -100,7 +100,7 @@ export default function DashboardPage() {
     setIsDeleting(null)
   }
 
-  const handleOnCompleteWorkout = async () => {
+  const handleEditWorkout = async () => {
     await fetchWorkouts(userId || '')
     setIsEditing(null)
   }
@@ -111,7 +111,7 @@ export default function DashboardPage() {
         open={isOpen}
         onOpenChange={setIsOpen}
         workoutToEdit={isEditing}
-        onCompleted={handleOnCompleteWorkout}
+        onCompleted={handleEditWorkout}
       />
 
       <ConfirmationAlert
@@ -147,7 +147,7 @@ export default function DashboardPage() {
               }}
             />
 
-            <div className='sticky bottom-0 bg-white p-4 border-t space-y-2'>
+            <div className='sticky bottom-0 bg-white dark:bg-zinc-900 opacity-90 hover:opacity-100 p-4 border-t space-y-2'>
               <Button
                 onClick={handleAddWorkout}
                 className='w-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-2'

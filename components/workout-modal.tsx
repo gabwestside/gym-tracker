@@ -44,19 +44,22 @@ export function WorkoutModal({
     [workoutToEdit]
   )
 
-  useEffect(() => {
-    if (workoutToEdit) {
-      setDate(workoutToEdit.date || '')
-      setTime(workoutToEdit.time || '')
-      setNotes(workoutToEdit.note || '')
-      setImageUrl(workoutToEdit.image_url || '')
-    } else {
-      setDate('')
-      setTime('')
-      setNotes('')
-      setImageUrl('')
-    }
-  }, [workoutToEdit])
+useEffect(() => {
+  if (workoutToEdit) {
+    const rawDate = workoutToEdit.date
+    const formattedDate = rawDate?.slice(0, 10) || ''
+    
+    setDate(formattedDate)
+    setTime(workoutToEdit.time || '')
+    setNotes(workoutToEdit.note || '')
+    setImageUrl(workoutToEdit.image_url || '')
+  } else {
+    setDate('')
+    setTime('')
+    setNotes('')
+    setImageUrl('')
+  }
+}, [workoutToEdit])
 
   const handleSubmit = async () => {
     if (!date.trim()) {
@@ -71,8 +74,7 @@ export function WorkoutModal({
 
     setLoading(true)
 
-    const workoutData: Workout = {
-      id: workoutToEdit?.id || '',
+    const workoutData = {
       date,
       note: notes,
       image_url: imageUrl,

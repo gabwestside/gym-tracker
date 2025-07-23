@@ -1,8 +1,13 @@
+'use client'
+
 import { Workout } from '@/app/dashboard/page'
 import { Button } from '@/components/ui/button'
 import dayjs from 'dayjs'
+import 'dayjs/locale/pt-br'
 import { Pencil, Trash } from 'lucide-react'
 import Image from 'next/image'
+
+dayjs.locale('pt-br')
 
 export function WorkoutCard({
   workouts,
@@ -22,32 +27,46 @@ export function WorkoutCard({
   ) : (
     <>
       {workouts.map((workout) => (
-        <div key={workout.id} className='rounded-lg border p-4 shadow-sm'>
-          <div className='flex justify-between items-center mb-2'>
+        <div
+          key={workout.id}
+          className='rounded-lg border p-4 shadow-md transition-colors bg-white dark:bg-zinc-900'
+        >
+          <div className='flex justify-between items-center mb-2 flex-wrap gap-2'>
+            {workout.note && (
+              <span className='text-xs font-semibold px-2 py-1 bg-green-200 text-green-800 rounded-full'>
+                {workout.note}
+              </span>
+            )}
             <span className='text-sm text-muted-foreground'>
-              {dayjs(workout.date).format('DD/MM/YYYY')}
-              {workout.time && ` às ${workout.time}`}
+              {dayjs(workout.date).format('D [de] MMMM')}
+              {workout.time && ` às ${workout.time.slice(0, 5)}`}
             </span>
           </div>
-          {workout.note && <p className='text-base mb-2'>{workout.note}</p>}
+
           {workout.image_url && (
             <Image
               src={workout.image_url}
               alt='Foto do treino'
-              className='rounded-md w-full max-h-72 object-cover'
+              className='rounded-md w-full max-h-72 object-cover hover:scale-[1.015] transition-transform shadow-sm'
               width={800}
               height={600}
             />
           )}
 
           <div className='flex justify-end gap-2 mt-2'>
-            <Button variant='ghost' size='icon' onClick={() => onEdit(workout)}>
+            <Button
+              variant='ghost'
+              size='icon'
+              onClick={() => onEdit(workout)}
+              title='Editar treino'
+            >
               <Pencil className='w-4 h-4' />
             </Button>
             <Button
               variant='ghost'
               size='icon'
               onClick={() => onDelete(workout)}
+              title='Excluir treino'
             >
               <Trash className='w-4 h-4 text-red-500' />
             </Button>
