@@ -13,6 +13,7 @@ import { Loading } from '@/components/loading'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { WorkoutCard } from '@/components/workout-card'
 import { WorkoutModal } from '@/components/workout-modal'
+import { ConfirmationAlert } from '@/components/confirmation-alert'
 
 export type Workout = {
   id: string
@@ -101,16 +102,28 @@ export default function DashboardPage() {
   )
 
   const [isEditing, setIsEditing] = useState<Workout | null>(null)
-
-  const handleDeleteWorkout = () => {
+  
+  const handleDeleteWorkout = async (workout: Workout) => {
     const confirmed = window.confirm(
       'Tem certeza que deseja deletar esse treino?'
     )
 
     if (!confirmed) return
 
-    setWorkouts((prev) => prev.filter((t) => t.id !== user?.id))
-    toast.success('Treino deletado com sucesso!')
+    const { error } = await supabase
+      .from('workouts')
+      .delete()
+      .eq('id', workout.id)
+
+    if (error) {
+      toast.error('Erro ao deletar treino.')
+    } else {
+      toast.success('Treino deletado com sucesso!')
+      setWorkouts((prev) => prev.filter((t) => t.id !== workout.id))
+      fetchWorkouts(user?.id || '')
+      setLoading(true)
+      setIsEditing(null)
+    }
   }
 
   const handleEditWorkout = (workout: Workout) => {
@@ -121,10 +134,15 @@ export default function DashboardPage() {
   return (
     <div className='max-w-sm mx-auto p-4 space-y-4'>
       <WorkoutModal
-      
         trigger={isEditing ? true : false}
         workoutToEdit={isEditing}
         onCompleted={() => fetchWorkouts(user?.id || '')}
+      />
+
+      <ConfirmationAlert
+        open={!!isEditing}
+        title='Tem certeza que deseja deletar esse treino?'
+        description='Essa ação não pode ser desfeita.'
       />
 
       {loading && <Loading />}
@@ -144,7 +162,7 @@ export default function DashboardPage() {
 
       <WorkoutCard
         workouts={workouts}
-        onDelete={handleDeleteWorkout}
+        onDelete={(workout) => handleDeleteWorkout(workout)}
         onEdit={(workout) => handleEditWorkout(workout)}
       />
 

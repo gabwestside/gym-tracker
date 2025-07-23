@@ -51,6 +51,8 @@ export default function NewWorkoutPage() {
       image_url: imageUrl,
     })
 
+    console.log('Workout data:', date)
+
     if (error) {
       toast.error('Erro ao salvar treino.')
     } else {

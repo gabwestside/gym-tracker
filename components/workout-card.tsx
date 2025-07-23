@@ -10,7 +10,7 @@ export function WorkoutCard({
   onEdit,
 }: {
   workouts: Workout[]
-  onDelete: () => void
+  onDelete: (workout: Workout) => void
   onEdit: (workout: Workout) => void
 }) {
   return workouts.length === 0 ? (
@@ -44,7 +44,7 @@ export function WorkoutCard({
             <Button variant='ghost' size='icon' onClick={() => onEdit(workout)}>
               <Pencil className='w-4 h-4' />
             </Button>
-            <Button variant='ghost' size='icon' onClick={onDelete}>
+            <Button variant='ghost' size='icon' onClick={() => onDelete(workout)}>
               <Trash className='w-4 h-4 text-red-500' />
             </Button>
           </div>
