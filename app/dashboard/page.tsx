@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import { toast } from 'sonner'
 import dayjs from 'dayjs'
@@ -28,32 +28,30 @@ export default function DashboardPage() {
   const [hasWorkoutDays, setHasWorkoutDays] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const [session, setSession] = useState<Session | null>(null)
+  const [isEditing, setIsEditing] = useState<Workout | null>(null)
+  const [isDeleting, setIsDeleting] = useState<Workout | null>(null)
+  const [isOpen, setIsOpen] = useState(false)
+
   const router = useRouter()
-  const { user } = session || {}
+  const userId = session?.user?.id
 
-  useEffect(() => {
-    const initialize = async () => {
-      const { data } = await supabase.auth.getSession()
-      const currentSession = data.session
+  const initializeSession = useCallback(async () => {
+    const { data } = await supabase.auth.getSession()
+    const currentSession = data.session
 
-      if (!currentSession) {
-        router.push('/login')
-        return
-      }
+    if (!currentSession) return router.push('/login')
+    if (!currentSession.user.email_confirmed_at) return router.push('/verify')
 
-      if (!currentSession.user.email_confirmed_at) {
-        router.push('/verify')
-        return
-      }
-
-      setSession(currentSession)
-      await fetchWorkouts(currentSession.user.id)
-    }
-
-    initialize()
+    setSession(currentSession)
+    await fetchWorkouts(currentSession.user.id)
   }, [router])
 
+  useEffect(() => {
+    initializeSession()
+  }, [initializeSession])
+
   const fetchWorkouts = async (userId: string) => {
+    setLoading(true)
     const { data, error } = await supabase
       .from('workouts')
       .select('*')
@@ -62,6 +60,7 @@ export default function DashboardPage() {
 
     if (error) {
       toast.error('Erro ao buscar treinos.')
+      setLoading(false)
       return
     }
 
@@ -83,96 +82,91 @@ export default function DashboardPage() {
     setIsOpen(true)
   }
 
-  const ActionButtons = () => (
-    <div className='space-y-2'>
-      <Button
-        onClick={handleAddWorkout}
-        className='w-full rounded bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-700'
-      >
-        <PlusIcon />
-        Adicionar Treino
-      </Button>
+  const handleDeleteWorkout = async () => {
+    if (!isDeleting) return
 
-      <Button
-        onClick={handleLogout}
-        className='w-full rounded bg-red-600 px-4 py-2 text-white hover:bg-red-700'
-      >
-        <LogOutIcon />
-        Sair
-      </Button>
-    </div>
-  )
-
-  const [isEditing, setIsEditing] = useState<Workout | null>(null)
-  const [isDeleting, setIsDeleting] = useState<Workout | null>(null)
-  const [isOpen, setIsOpen] = useState(false)
-
-  const handleDeleteWorkout = async (workout: Workout) => {
     const { error } = await supabase
       .from('workouts')
       .delete()
-      .eq('id', workout.id)
+      .eq('id', isDeleting.id)
 
     if (error) {
       toast.error('Erro ao deletar treino.')
     } else {
       toast.success('Treino deletado com sucesso!')
-      setWorkouts((prev) => prev.filter((t) => t.id !== workout.id))
-      fetchWorkouts(user?.id || '')
-      setLoading(true)
-      setIsEditing(null)
+      await fetchWorkouts(userId || '')
     }
+
+    setIsDeleting(null)
   }
 
-  const handleEditWorkout = () => {
-    setWorkouts((prev) => prev.filter((t) => t.id !== isEditing?.id))
+  const handleOnCompleteWorkout = async () => {
+    await fetchWorkouts(userId || '')
     setIsEditing(null)
-    setLoading(true)
-    fetchWorkouts(user?.id || '')
   }
 
   return (
-    <div className='max-w-sm mx-auto p-4 space-y-4'>
+    <div className='flex flex-col h-screen max-w-sm mx-auto'>
       <WorkoutModal
         open={isOpen}
         onOpenChange={setIsOpen}
         workoutToEdit={isEditing}
-        onCompleted={handleEditWorkout}
+        onCompleted={handleOnCompleteWorkout}
       />
 
       <ConfirmationAlert
         open={!!isDeleting}
         title='Tem certeza que deseja deletar esse treino?'
         description='Essa ação não pode ser desfeita.'
-        onCompleted={() => handleDeleteWorkout(isDeleting!)}
+        onCompleted={handleDeleteWorkout}
         onCancel={() => setIsDeleting(null)}
       />
 
-      {loading && <Loading />}
+      <div className='flex-1 overflow-y-auto p-4 space-y-4'>
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            <div className='flex justify-between items-center mb-4'>
+              <h1 className='text-xl font-bold'>
+                Bem-vindo, {session?.user?.email || 'Usuário'}
+              </h1>
+              <ThemeToggle />
+            </div>
 
-      <div className='flex justify-between items-center mb-4'>
-        <h1 className='mb-4 text-xl font-bold'>
-          Bem-vindo, {session?.user?.email || 'Usuário'}
-        </h1>
-        <div className='flex justify-end p-4'>
-          <ThemeToggle />
-        </div>
+            <h2 className='font-bold mb-4'>Seus Treinos</h2>
+
+            <WorkoutCalendar hasWorkoutDays={hasWorkoutDays} />
+
+            <WorkoutCard
+              workouts={workouts}
+              onDelete={setIsDeleting}
+              onEdit={(workout) => {
+                setIsEditing(workout)
+                setIsOpen(true)
+              }}
+            />
+
+            <div className='sticky bottom-0 bg-white p-4 border-t space-y-2'>
+              <Button
+                onClick={handleAddWorkout}
+                className='w-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-2'
+              >
+                <PlusIcon size={18} />
+                Adicionar Treino
+              </Button>
+
+              <Button
+                onClick={handleLogout}
+                className='w-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center gap-2'
+              >
+                <LogOutIcon size={18} />
+                Sair
+              </Button>
+            </div>
+          </>
+        )}
       </div>
-
-      <h2 className='font-bold mb-4'>Seus Treinos</h2>
-
-      <WorkoutCalendar hasWorkoutDays={hasWorkoutDays} />
-
-      <WorkoutCard
-        workouts={workouts}
-        onDelete={(workout) => setIsDeleting(workout)}
-        onEdit={(workout) => {
-          setIsEditing(workout)
-          setIsOpen(true)
-        }}
-      />
-
-      <ActionButtons />
     </div>
   )
 }
