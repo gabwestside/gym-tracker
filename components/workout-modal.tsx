@@ -1,29 +1,31 @@
 'use client'
 
-import { useState, useEffect, useMemo, Dispatch, SetStateAction } from 'react'
+import { Workout } from '@/app/dashboard/page'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
-  DialogContent,
-  DialogTrigger,
-  DialogTitle,
   DialogClose,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-import { toast } from 'sonner'
-import { motion } from 'framer-motion'
 import { supabase } from '@/lib/supabase'
-import Image from 'next/image'
+import { motion } from 'framer-motion'
+import { X } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
+import { toast } from 'sonner'
 import { UploadButton } from './upload-button'
-import { Workout } from '@/app/dashboard/page'
+import Image from 'next/image'
 
 interface WorkoutModalProps {
   trigger?: React.ReactNode
   onCompleted: () => void
   workoutToEdit?: Workout | null
   open: boolean
-  onOpenChange: Dispatch<SetStateAction<boolean>>
+  onOpenChange: (isOpen: boolean) => void
+  userId: string
 }
 
 export function WorkoutModal({
@@ -32,6 +34,7 @@ export function WorkoutModal({
   workoutToEdit,
   open,
   onOpenChange,
+  userId,
 }: WorkoutModalProps) {
   const [date, setDate] = useState('')
   const [notes, setNotes] = useState('')
@@ -44,22 +47,22 @@ export function WorkoutModal({
     [workoutToEdit]
   )
 
-useEffect(() => {
-  if (workoutToEdit) {
-    const rawDate = workoutToEdit.date
-    const formattedDate = rawDate?.slice(0, 10) || ''
-    
-    setDate(formattedDate)
-    setTime(workoutToEdit.time || '')
-    setNotes(workoutToEdit.note || '')
-    setImageUrl(workoutToEdit.image_url || '')
-  } else {
-    setDate('')
-    setTime('')
-    setNotes('')
-    setImageUrl('')
-  }
-}, [workoutToEdit])
+  useEffect(() => {
+    if (workoutToEdit) {
+      const rawDate = workoutToEdit.date
+      const formattedDate = rawDate?.slice(0, 10) || ''
+
+      setDate(formattedDate)
+      setTime(workoutToEdit.time || '')
+      setNotes(workoutToEdit.note || '')
+      setImageUrl(workoutToEdit.image_url || '')
+    } else {
+      setDate('')
+      setTime('')
+      setNotes('')
+      setImageUrl('')
+    }
+  }, [workoutToEdit])
 
   const handleSubmit = async () => {
     if (!date.trim()) {
@@ -79,6 +82,8 @@ useEffect(() => {
       note: notes,
       image_url: imageUrl,
       time,
+      ...(workoutToEdit?.id ? { id: workoutToEdit.id } : {}),
+      user_id: userId,
     }
 
     try {
@@ -143,13 +148,22 @@ useEffect(() => {
           <UploadButton onUpload={setImageUrl} />
 
           {imageUrl && (
-            <Image
-              src={imageUrl}
-              alt={modalTitle || 'Imagem do treino'}
-              className='w-full rounded-lg shadow-md max-h-48 object-cover'
-              width={600}
-              height={300}
-            />
+            <div className='relative'>
+              <Image
+                src={imageUrl}
+                alt={modalTitle || 'Imagem do treino'}
+                className='w-full rounded-lg shadow-md max-h-48 object-cover'
+                width={600}
+                height={300}
+              />
+              <button
+                onClick={() => setImageUrl('')}
+                className='absolute top-2 right-2 bg-black/60 p-1 rounded-full text-white hover:bg-black/80'
+                title='Remover imagem'
+              >
+                <X size={16} />
+              </button>
+            </div>
           )}
 
           <div className='flex flex-col gap-2'>

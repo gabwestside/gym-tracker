@@ -14,6 +14,7 @@ import { ThemeToggle } from '@/components/theme-toggle'
 import { WorkoutCard } from '@/components/workout-card'
 import { WorkoutModal } from '@/components/workout-modal'
 import { ConfirmationAlert } from '@/components/confirmation-alert'
+import { LogoutAlert } from '@/components/logout-alert'
 
 export type Workout = {
   id: string
@@ -31,6 +32,7 @@ export default function DashboardPage() {
   const [isEditing, setIsEditing] = useState<Workout | null>(null)
   const [isDeleting, setIsDeleting] = useState<Workout | null>(null)
   const [isOpen, setIsOpen] = useState(false)
+  const [isLogout, setIsLogout] = useState(false)
 
   const router = useRouter()
   const userId = session?.user?.id
@@ -73,6 +75,7 @@ export default function DashboardPage() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
+    setLoading(true)
     router.push('/login')
   }
 
@@ -100,18 +103,27 @@ export default function DashboardPage() {
     setIsDeleting(null)
   }
 
-  const handleEditWorkout = async () => {
-    await fetchWorkouts(userId || '')
+  const handleWorkoutAction = async () => {
     setIsEditing(null)
+    setIsDeleting(null)
+
+    await fetchWorkouts(userId || '')
+  }
+
+  const handleCleanUp = (isOpen: boolean) => {
+    setIsEditing(null)
+    setIsDeleting(null)
+    setIsOpen(isOpen)
   }
 
   return (
     <div className='flex flex-col h-screen max-w-sm mx-auto'>
       <WorkoutModal
         open={isOpen}
-        onOpenChange={setIsOpen}
+        onOpenChange={handleCleanUp}
         workoutToEdit={isEditing}
-        onCompleted={handleEditWorkout}
+        onCompleted={handleWorkoutAction}
+        userId={userId || ''}
       />
 
       <ConfirmationAlert
@@ -120,6 +132,14 @@ export default function DashboardPage() {
         description='Essa ação não pode ser desfeita.'
         onCompleted={handleDeleteWorkout}
         onCancel={() => setIsDeleting(null)}
+      />
+
+      <LogoutAlert
+        isOpen={isLogout}
+        title='Tem certeza que deseja sair?'
+        description=''
+        onCompleted={handleLogout}
+        onOpenChange={() => setIsLogout(false)}
       />
 
       <div className='flex-1 overflow-y-auto p-4 space-y-4'>
@@ -157,7 +177,7 @@ export default function DashboardPage() {
               </Button>
 
               <Button
-                onClick={handleLogout}
+                onClick={() => setIsLogout(true)}
                 className='w-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center gap-2'
               >
                 <LogOutIcon size={18} />
