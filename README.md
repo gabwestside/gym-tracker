@@ -1,36 +1,118 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# 💪 Gym Tracker
 
-First, run the development server:
+[![Next.js](https://img.shields.io/badge/Built%20with-Next.js-000?style=flat&logo=nextdotjs)](https://nextjs.org/)
+[![Supabase](https://img.shields.io/badge/Backend-Supabase-3ECF8E?style=flat&logo=supabase)](https://supabase.com/)
+[![Deploy Vercel](https://img.shields.io/badge/Deploy-Vercel-000?style=flat&logo=vercel)](https://vercel.com/)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+> Um sistema moderno e responsivo para registrar seus treinos de forma visual e motivadora.
+
+---
+
+## ✨ Visão Geral
+
+O **Gym Tracker** é um aplicativo web feito com **Next.js 14**, **Supabase** e **Tailwind/Shadcn**, que permite aos usuários registrar, visualizar e acompanhar seus treinos com fotos, horários e observações.
+
+Ideal para quem busca manter a disciplina e acompanhar sua jornada fitness de forma simples, visual e acessível. Pode ser usado individualmente ou em dupla.
+
+---
+
+## 📸 Preview
+<img width="1317" height="933" alt="image" src="https://github.com/user-attachments/assets/d26e434d-1251-4b31-ac9b-4abc9a1ca292" />
+
+---
+
+## 🚀 Publicação
+
+A aplicação está hospedada gratuitamente via GitHub Pages:  
+👉 [Acesse aqui](https://gabweside-gym-tracker.vercel.app/)
+
+---
+
+## 🧩 Funcionalidades
+
+- ✅ Autenticação segura com Supabase
+- 🗓️ Registro de treinos com **data** e **hora**
+- ✏️ Campos para anotações pessoais
+- 📷 Upload de **fotos dos treinos** como motivação
+- 📆 Calendário com histórico visual de treinos
+- 🌙 Suporte a **dark mode**
+- 📱 Layout **100% responsivo**
+- 🔐 Modal de edição com visual moderno e animações
+- 🧪 Toasts de feedback com Sonner
+
+---
+
+## 🛠️ Tecnologias
+
+- [Next.js 14 (App Router)](https://nextjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Supabase](https://supabase.com/) (Auth + Database + Storage)
+- [TailwindCSS](https://tailwindcss.com/)
+- [shadcn/ui](https://ui.shadcn.com/)
+- [Lucide Icons](https://lucide.dev/)
+- [React Day Picker](https://react-day-picker.js.org/)
+- [Sonner (Toasts)](https://sonner.emilkowal.dev/)
+
+---
+
+## 🚀 Como rodar localmente
+
+### 1. Clone o projeto
+
+```bash
+git clone https://github.com/seu-usuario/gym-tracker.git
+cd gym-tracker
+````
+
+### 2. Instale as dependências
+
+```bash
+npm install
+# ou
+yarn
+```
+
+### 3. Configure o `.env.local`
+
+Crie um arquivo `.env.local` com suas variáveis do Supabase:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+### 4. Rode o servidor
 
 ```bash
 npm run dev
-# or
+# ou
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abra `http://localhost:3000` no navegador 🚀
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🧑‍💻 Como contribuir
 
-## Learn More
+1. Faça um fork deste repositório
+2. Crie uma branch: `git checkout -b minha-feature`
+3. Commit suas alterações: `git commit -m 'feat: nova funcionalidade'`
+4. Push para sua branch: `git push origin minha-feature`
+5. Abra um pull request 🤝
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📝 Licença
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 👨‍💻 Desenvolvido por Gabriel Rodrigues
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Se curtiu, me dá uma ⭐ no repositório e bora treinar! 💪🔥
+
