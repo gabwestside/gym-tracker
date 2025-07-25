@@ -14,10 +14,11 @@ import { Textarea } from '@/components/ui/textarea'
 import { supabase } from '@/lib/supabase'
 import { motion } from 'framer-motion'
 import { X } from 'lucide-react'
+import Image from 'next/image'
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
+import { Skeleton } from './ui/skeleton'
 import { UploadButton } from './upload-button'
-import Image from 'next/image'
 
 interface WorkoutModalProps {
   trigger?: React.ReactNode
@@ -41,6 +42,7 @@ export function WorkoutModal({
   const [imageUrl, setImageUrl] = useState('')
   const [loading, setLoading] = useState(false)
   const [time, setTime] = useState('')
+  const [imageLoading, setImageLoading] = useState(false)
 
   const modalTitle = useMemo(
     () => (workoutToEdit ? 'Editar Treino' : 'Registrar Treino'),
@@ -109,6 +111,11 @@ export function WorkoutModal({
     }
   }
 
+  const handleImageUpload = (url: string, isLoading: boolean) => {
+    setImageLoading(isLoading)
+    setImageUrl(url)
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
@@ -145,16 +152,21 @@ export function WorkoutModal({
             onChange={(e) => setNotes(e.target.value)}
           />
 
-          <UploadButton onUpload={setImageUrl} />
+          <UploadButton onUpload={handleImageUpload} />
 
           {imageUrl && (
             <div className='relative'>
+              {imageLoading && <Skeleton className='w-full h-48 rounded-lg' />}
               <Image
                 src={imageUrl}
                 alt={modalTitle || 'Imagem do treino'}
-                className='w-full rounded-lg shadow-md max-h-48 object-cover'
+                className={`w-full rounded-lg shadow-md max-h-48 object-cover transition-opacity duration-500 ${
+                  imageLoading ? 'opacity-0' : 'opacity-100'
+                }`}
                 width={600}
                 height={300}
+                onLoad={() => setImageLoading(false)}
+                onLoadingComplete={() => setImageLoading(false)}
               />
               <button
                 onClick={() => setImageUrl('')}

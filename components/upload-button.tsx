@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { supabase } from '@/lib/supabase'
 
 interface UploadButtonProps {
-  onUpload: (url: string) => void
+  onUpload: (url: string, loading: boolean) => void
 }
 
 export function UploadButton({ onUpload }: UploadButtonProps) {
@@ -20,27 +20,32 @@ export function UploadButton({ onUpload }: UploadButtonProps) {
 
     setUploading(true)
     toast.info('Enviando imagem...')
+    onUpload('', true)
 
     try {
       const fileExt = file.name.split('.').pop()
       const fileName = `${uuidv4()}.${fileExt}`
       const filePath = `workouts/${fileName}`
 
-      const { error } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('workout-photos')
         .upload(filePath, file)
 
-      if (error) throw error
+      if (uploadError) throw uploadError
 
-      const { data } = supabase.storage.from('images').getPublicUrl(filePath)
+      const { data } = supabase.storage
+        .from('workout-photos')
+        .getPublicUrl(filePath)
+
       if (!data?.publicUrl) throw new Error('Falha ao obter a URL pública')
 
       toast.success('Imagem enviada com sucesso!')
-      onUpload(data.publicUrl)
+      onUpload(data.publicUrl, false)
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : 'Um erro desconhecido ocorreu.'
       toast.error(`Falha no envio: ${errorMessage}`)
+      onUpload('', false)
     } finally {
       setUploading(false)
     }
@@ -61,7 +66,7 @@ export function UploadButton({ onUpload }: UploadButtonProps) {
         disabled={uploading}
         variant='outline'
       >
-        {uploading ? 'Enviar...' : 'Enviar Imagem'}
+        {uploading ? 'Enviando...' : 'Enviar Imagem'}
       </Button>
     </>
   )
