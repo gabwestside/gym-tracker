@@ -64,7 +64,7 @@ A aplicação está hospedada gratuitamente via GitHub Pages:
 ```bash
 git clone https://github.com/seu-usuario/gym-tracker.git
 cd gym-tracker
-````
+```
 
 ### 2. Instale as dependências
 
