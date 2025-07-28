@@ -1,0 +1,57 @@
+{
+  "login": {
+    "title": "Login",
+    "email": "Your email",
+    "password": "Your password",
+    "button": "Sign in",
+    "loadButton": "Logging in...",
+    "noAccount": "Don't have an account?",
+    "createAccount": "Create account",
+    "signinError": "Error logging in:",
+    "signinSuccess": "Login successful! Redirecting...",
+    "forgotPassword": "Forgot your password?"
+  },
+  "register": {
+    "title": "Register your account",
+    "email": "Your email",
+    "password": "Your password",
+    "confirmPassword": "Confirm your password",
+    "button": "Register",
+    "loadButton": "Registering...",
+    "alreadyHaveAccount": "Already have an account?",
+    "login": "Sign in",
+    "registerError": "Error registering:",
+    "registerSuccess": "Account created! Check your e-mail."
+  },
+  "verify": {
+    "title": "Verify your email",
+    "description": "We have sent a confirmation link to your e-mail address. Click on the button to activate your account.",
+    "subtitle": "After confirming, you can log in as normal."
+  },
+  "confirmed": {
+    "title": "Confirmed e-mail",
+    "description": "You have already confirmed your e-mail address. You can now access the system!",
+    "button": "Enter"
+  },
+  "error": {
+    "title": "The session could not be recovered. Please try again.",
+    "button": "Log in again"
+  },
+  "dashboard": {
+    "welcome": "Welcome, {email}",
+    "yourWorkouts": "Your Workouts",
+    "addWorkout": "Add Workout",
+    "logout": "Log out",
+    "deleteWorkoutTitle": "Are you sure you want to delete this workout?",
+    "deleteWorkoutDescription": "This action cannot be undone."
+  },
+  "workoutModal": {
+    "title": "Add Workout",
+    "name": "Workout Name",
+    "description": "Workout Description",
+    "exercises": "Exercises",
+    "addExercise": "Add Exercise",
+    "save": "Save Workout",
+    "cancel": "Cancel"
+  }
+}

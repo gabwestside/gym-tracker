@@ -6,7 +6,7 @@ export default function ErrorPage() {
       <div className='w-full max-w-md rounded bg-white p-6 shadow text-center'>
         <h1 className='text-2xl font-bold mb-4 text-red-600'>Erro 💥</h1>
         <p className='text-gray-600'>
-          {'Não foi possível recuperar a sessão. Tente novamente.'}
+          Não foi possível recuperar a sessão. Tente novamente.
         </p>
         <Link
           href='/'

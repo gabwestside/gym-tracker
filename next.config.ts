@@ -1,12 +1,10 @@
+import withNextIntl from 'next-intl/plugin'
 import type { NextConfig } from 'next'
 
+const withIntl = withNextIntl('./next-intl.config.ts')
+
 const nextConfig: NextConfig = {
-  /* config options here */
   images: {
-    // domains: [
-    //   process.env.NEXT_PUBLIC_SUPABASE_DOMAIN ||
-    //     'ctxbakysvmnwewronovf.supabase.co',
-    // ],
     remotePatterns: [
       {
         protocol: 'https',
@@ -17,4 +15,4 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default nextConfig
+export default withIntl(nextConfig)

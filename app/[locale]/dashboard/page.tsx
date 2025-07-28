@@ -15,14 +15,7 @@ import { WorkoutCard } from '@/components/workout-card'
 import { WorkoutModal } from '@/components/workout-modal'
 import { ConfirmationAlert } from '@/components/confirmation-alert'
 import { LogoutAlert } from '@/components/logout-alert'
-
-export type Workout = {
-  id: string
-  date: string
-  time: string
-  note: string
-  image_url: string
-}
+import { Workout } from '@/lib/types'
 
 export default function DashboardPage() {
   const [workouts, setWorkouts] = useState<Workout[]>([])

@@ -7,8 +7,10 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
+import { useTranslations } from 'next-intl'
 
 export default function LoginPage() {
+  const t = useTranslations('login')
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -22,9 +24,9 @@ export default function LoginPage() {
     })
 
     if (error) {
-      toast.error('Erro ao logar: ' + error.message)
+      toast.error(`${t('signinError')}: ` + error.message)
     } else {
-      toast.success('Login realizado com sucesso!')
+      toast.success(t('signinSuccess'))
       router.push('/dashboard')
     }
 
@@ -34,11 +36,11 @@ export default function LoginPage() {
   return (
     <main className='flex min-h-screen items-center justify-center bg-background text-foreground'>
       <Card className='w-full max-w-sm p-6 shadow-xl'>
-        <h1 className='mb-4 text-center text-2xl font-bold'>Login</h1>
+        <h1 className='mb-4 text-center text-2xl font-bold'>{t('title')}</h1>
 
         <Input
           type='email'
-          placeholder='Seu e-mail'
+          placeholder={t('email')}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className='mb-2'
@@ -46,20 +48,20 @@ export default function LoginPage() {
         
         <Input
           type='password'
-          placeholder='Sua senha'
+          placeholder={t('password')}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className='mb-4'
         />
 
         <Button onClick={handleLogin} disabled={loading} className='w-full'>
-          {loading ? 'Entrando...' : 'Entrar'}
+          {loading ? t('loadButton') : t('button')}
         </Button>
 
         <p className='mt-4 text-sm text-center'>
-          Ainda não tem conta?{' '}
+          {t('noAccount')}{' '}
           <a href='/register' className='text-blue-600 hover:underline'>
-            Criar conta
+            {t('createAccount')}
           </a>
         </p>
       </Card>

@@ -1,7 +1,7 @@
 'use client'
 
-import { Workout } from '@/app/dashboard/page'
 import { Button } from '@/components/ui/button'
+import { Workout } from '@/lib/types'
 import dayjs from 'dayjs'
 import 'dayjs/locale/pt-br'
 import { Pencil, Trash } from 'lucide-react'

@@ -1,6 +1,5 @@
 'use client'
 
-import { Workout } from '@/app/dashboard/page'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -19,6 +18,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import { Skeleton } from './ui/skeleton'
 import { UploadButton } from './upload-button'
+import { Workout } from '@/lib/types'
 
 interface WorkoutModalProps {
   trigger?: React.ReactNode

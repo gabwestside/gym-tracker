@@ -1,0 +1,40 @@
+{
+  "login": {
+    "title": "Login",
+    "email": "Seu e-mail",
+    "password": "Sua senha",
+    "button": "Entrar",
+    "noAccount": "Ainda não tem conta?",
+    "createAccount": "Criar conta",
+    "loadButton": "Entrando...",
+    "signinError": "Erro ao logar",
+    "signinSuccess": "Login realizado com sucesso! Redirecionando...",
+    "forgotPassword": "Esqueceu sua senha?"
+  },
+  "register": {
+    "title": "Registrar",
+    "email": "Seu e-mail",
+    "password": "Sua senha",
+    "confirmPassword": "Confirme sua senha",
+    "button": "Registrar",
+    "alreadyHaveAccount": "Já tem uma conta?",
+    "login": "Entrar"
+  },
+  "dashboard": {
+    "welcome": "Bem-vindo, {email}",
+    "yourWorkouts": "Seus Treinos",
+    "addWorkout": "Adicionar Treino",
+    "logout": "Sair",
+    "deleteWorkoutTitle": "Tem certeza que deseja deletar esse treino?",
+    "deleteWorkoutDescription": "Essa ação não pode ser desfeita."
+  },
+  "workoutModal": {
+    "title": "Adicionar Treino",
+    "name": "Nome do Treino",
+    "description": "Descrição do Treino",
+    "exercises": "Exercícios",
+    "addExercise": "Adicionar Exercício",
+    "save": "Salvar Treino",
+    "cancel": "Cancelar"
+  }
+}
