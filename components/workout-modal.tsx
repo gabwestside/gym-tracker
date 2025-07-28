@@ -77,6 +77,11 @@ export function WorkoutModal({
       return
     }
 
+    if (!notes.trim()) {
+      toast.error('É importante dizer o que vc treinou hoje.')
+      return
+    }
+
     setLoading(true)
 
     const workoutData = {
@@ -147,7 +152,7 @@ export function WorkoutModal({
           />
 
           <Textarea
-            placeholder='Observações (opcional)'
+            placeholder='O que você treinou hoje?'
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
           />
