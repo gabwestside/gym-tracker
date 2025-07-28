@@ -117,7 +117,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className='flex flex-col h-screen max-w-sm mx-auto'>
+    <main className='min-h-screen bg-background text-foreground px-4 py-6 md:px-8 lg:px-16 xl:px-24'>
       <WorkoutModal
         open={isOpen}
         onOpenChange={handleCleanUp}
@@ -142,51 +142,61 @@ export default function DashboardPage() {
         onOpenChange={() => setIsLogout(false)}
       />
 
-      <div className='flex-1 overflow-y-auto p-4 space-y-4'>
-        {loading ? (
-          <Loading />
-        ) : (
-          <>
-            <div className='flex justify-between items-center mb-4'>
+      {loading ? (
+        <Loading />
+      ) : (
+        <div className='mx-auto w-full max-w-7xl space-y-6'>
+          {/* Header */}
+          <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
+            <div>
               <h1 className='text-xl font-bold'>
                 Bem-vindo, {session?.user?.email || 'Usuário'}
               </h1>
-              <ThemeToggle />
+              <p className='text-sm text-muted-foreground'>Seus Treinos</p>
             </div>
+            <ThemeToggle />
+          </div>
 
-            <h2 className='font-bold mb-4'>Seus Treinos</h2>
+          {/* Grid Content */}
+          <div className='grid gap-6 md:grid-cols-[400px_1fr]'>
+            {/* Calendar in the left */}
+            <section className='rounded-lg border bg-card p-4 shadow-sm w-full'>
+              <WorkoutCalendar hasWorkoutDays={hasWorkoutDays} />
+            </section>
 
-            <WorkoutCalendar hasWorkoutDays={hasWorkoutDays} />
+            {/* List of workouts in the right */}
+            <section className='flex flex-col gap-4'>
+              <WorkoutCard
+                workouts={workouts}
+                onDelete={setIsDeleting}
+                onEdit={(workout) => {
+                  setIsEditing(workout)
+                  setIsOpen(true)
+                }}
+              />
 
-            <WorkoutCard
-              workouts={workouts}
-              onDelete={setIsDeleting}
-              onEdit={(workout) => {
-                setIsEditing(workout)
-                setIsOpen(true)
-              }}
-            />
+              {/* Fixed buttons in the bottom of the page */}
+              <div className='sticky bottom-0 bg-background/90 backdrop-blur border-t p-4 space-y-2 rounded-t-lg'>
+                <Button
+                  onClick={handleAddWorkout}
+                  className='w-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-2'
+                >
+                  <PlusIcon size={18} />
+                  Adicionar Treino
+                </Button>
 
-            <div className='sticky bottom-0 bg-white dark:bg-zinc-900 opacity-90 hover:opacity-100 p-4 border-t space-y-2'>
-              <Button
-                onClick={handleAddWorkout}
-                className='w-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-2'
-              >
-                <PlusIcon size={18} />
-                Adicionar Treino
-              </Button>
-
-              <Button
-                onClick={() => setIsLogout(true)}
-                className='w-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center gap-2'
-              >
-                <LogOutIcon size={18} />
-                Sair
-              </Button>
-            </div>
-          </>
-        )}
-      </div>
-    </div>
+                <Button
+                  onClick={() => setIsLogout(true)}
+                  className='w-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center gap-2'
+                >
+                  <LogOutIcon size={18} />
+                  Sair
+                </Button>
+              </div>
+            </section>
+          </div>
+        </div>
+      )}
+    </main>
   )
 }
