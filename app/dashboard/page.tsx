@@ -3,26 +3,20 @@
 import { ConfirmationAlert } from '@/components/confirmation-alert'
 import { Loading } from '@/components/loading'
 import { LogoutAlert } from '@/components/logout-alert'
+import { ShareWorkoutModal } from '@/components/share-workout-modal'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
 import { WorkoutCalendar } from '@/components/workout-calendar'
 import { WorkoutCard } from '@/components/workout-card'
 import { WorkoutModal } from '@/components/workout-modal'
 import { supabase } from '@/lib/supabase'
+import { Workout } from '@/lib/types'
 import { Session } from '@supabase/supabase-js'
 import dayjs from 'dayjs'
 import { LogOutIcon, PlusIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
-
-export type Workout = {
-  id: string
-  date: string
-  time: string
-  note: string
-  image_url: string
-}
 
 export default function DashboardPage() {
   const [workouts, setWorkouts] = useState<Workout[]>([])
@@ -33,6 +27,8 @@ export default function DashboardPage() {
   const [isDeleting, setIsDeleting] = useState<Workout | null>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [isLogout, setIsLogout] = useState(false)
+  const [shareModalOpen, setShareModalOpen] = useState(false)
+  const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null)
 
   const router = useRouter()
   const userId = session?.user?.id
@@ -117,33 +113,40 @@ export default function DashboardPage() {
   }
 
   const handleShare = async (workout: Workout) => {
-    const { image_url, note, date, time } = workout
+    setSelectedWorkout(workout)
+    setShareModalOpen(true)
 
-    const text = `
-      ${note}
-      Realizado no dia ${dayjs(date).format('DD/MM/YYYY')} às ${time}.
-      Ficou motivado? Bora treinar também 💪🏋️‍♀️
-      https://gabweside-gym-tracker.vercel.app/
-    `.trim()
+    // const { image_url, note, date, time } = workout
 
-    if (navigator.share) {
-      try {
-        const response = await fetch(image_url)
-        const blob = await response.blob()
+    // const baseUrl =
+    //   process.env.NEXT_PUBLIC_BASE_URL ||
+    //   'https://gabweside-gym-tracker.vercel.app/'
 
-        const file = new File([blob], 'treino.jpg', { type: blob.type })
+    // const text =
+    //   `Hoje foi dia de ${note.toLowerCase()}, realizado no dia ${dayjs(
+    //     date
+    //   ).format(
+    //     'DD/MM/YYYY'
+    //   )} às ${time}.\nFicou motivado? Bora treinar também 💪🏋️‍♀️\n${baseUrl}`.trim()
 
-        await navigator.share({
-          title: 'Confira meu treino 💪',
-          text,
-          files: [file],
-        })
-      } catch (error) {
-        toast.error('Erro ao compartilhar o treino: ' + error)
-      }
-    } else {
-      toast.warning('Seu navegador não suporta compartilhamento com imagem.')
-    }
+    // if (navigator.share) {
+    //   try {
+    //     const response = await fetch(image_url)
+    //     const blob = await response.blob()
+
+    //     const file = new File([blob], 'treino.jpg', { type: blob.type })
+
+    //     await navigator.share({
+    //       title: 'Confira meu treino 💪',
+    //       text,
+    //       files: [file],
+    //     })
+    //   } catch (error) {
+    //     toast.error('Erro ao compartilhar o treino: ' + error)
+    //   }
+    // } else {
+    //   toast.warning('Seu navegador não suporta compartilhamento com imagem.')
+    // }
   }
 
   return (
@@ -170,6 +173,12 @@ export default function DashboardPage() {
         description=''
         onCompleted={handleLogout}
         onOpenChange={() => setIsLogout(false)}
+      />
+
+      <ShareWorkoutModal
+        open={shareModalOpen}
+        onOpenChange={setShareModalOpen}
+        workout={selectedWorkout}
       />
 
       {loading ? (
