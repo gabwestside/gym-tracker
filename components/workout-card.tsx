@@ -30,6 +30,7 @@ export function WorkoutCard({
     <>
       {workouts.map((workout) => (
         <div
+          id={`workout-card-${workout.id}`}
           key={workout.id}
           className='rounded-lg border p-4 shadow-md transition-colors bg-white dark:bg-zinc-900'
         >
@@ -73,7 +74,7 @@ export function WorkoutCard({
               <Trash className='w-4 h-4 text-red-500' />
             </Button>
             <Button
-              variant='outline'
+              variant='ghost'
               size='icon'
               onClick={() => onShare(workout)}
             >

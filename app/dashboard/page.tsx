@@ -1,20 +1,20 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
-import { supabase } from '@/lib/supabase'
-import { toast } from 'sonner'
-import dayjs from 'dayjs'
-import { WorkoutCalendar } from '@/components/workout-calendar'
-import { Session } from '@supabase/supabase-js'
-import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { LogOutIcon, PlusIcon } from 'lucide-react'
+import { ConfirmationAlert } from '@/components/confirmation-alert'
 import { Loading } from '@/components/loading'
+import { LogoutAlert } from '@/components/logout-alert'
 import { ThemeToggle } from '@/components/theme-toggle'
+import { Button } from '@/components/ui/button'
+import { WorkoutCalendar } from '@/components/workout-calendar'
 import { WorkoutCard } from '@/components/workout-card'
 import { WorkoutModal } from '@/components/workout-modal'
-import { ConfirmationAlert } from '@/components/confirmation-alert'
-import { LogoutAlert } from '@/components/logout-alert'
+import { supabase } from '@/lib/supabase'
+import { Session } from '@supabase/supabase-js'
+import dayjs from 'dayjs'
+import { LogOutIcon, PlusIcon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useCallback, useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 export type Workout = {
   id: string
@@ -116,20 +116,33 @@ export default function DashboardPage() {
     setIsOpen(isOpen)
   }
 
-  const handleShare = (workout: Workout) => {
-    const formattedDate = dayjs(workout.date).format('DD/MM/YYYY')
-    const shareData = {
-      title: 'Meu treino 💪',
-      text: `Treino de ${workout.note} realizado no dia ${formattedDate}. Bora treinar também!`,
-      url: window.location.href,
-    }
+  const handleShare = async (workout: Workout) => {
+    const { image_url, note, date, time } = workout
+
+    const text = `
+      ${note}
+      Realizado no dia ${dayjs(date).format('DD/MM/YYYY')} às ${time}.
+      Ficou motivado? Bora treinar também 💪🏋️‍♀️
+      https://gabweside-gym-tracker.vercel.app/
+    `.trim()
 
     if (navigator.share) {
-      navigator
-        .share(shareData)
-        .catch((err) => console.error('Erro ao compartilhar:', err))
+      try {
+        const response = await fetch(image_url)
+        const blob = await response.blob()
+
+        const file = new File([blob], 'treino.jpg', { type: blob.type })
+
+        await navigator.share({
+          title: 'Confira meu treino 💪',
+          text,
+          files: [file],
+        })
+      } catch (error) {
+        toast.error('Erro ao compartilhar o treino: ' + error)
+      }
     } else {
-      toast.info('Compartilhamento não suportado nesse dispositivo.')
+      toast.warning('Seu navegador não suporta compartilhamento com imagem.')
     }
   }
 
