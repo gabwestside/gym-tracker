@@ -4,7 +4,7 @@ import { Workout } from '@/app/dashboard/page'
 import { Button } from '@/components/ui/button'
 import dayjs from 'dayjs'
 import 'dayjs/locale/pt-br'
-import { Pencil, Trash } from 'lucide-react'
+import { Pencil, Share2Icon, Trash } from 'lucide-react'
 import Image from 'next/image'
 
 dayjs.locale('pt-br')
@@ -13,10 +13,12 @@ export function WorkoutCard({
   workouts,
   onDelete,
   onEdit,
+  onShare,
 }: {
   workouts: Workout[]
   onDelete: (workout: Workout) => void
   onEdit: (workout: Workout) => void
+  onShare: (workout: Workout) => void
 }) {
   return workouts.length === 0 ? (
     <div className='rounded-lg border p-4 shadow-sm bg-green-100'>
@@ -69,6 +71,13 @@ export function WorkoutCard({
               title='Excluir treino'
             >
               <Trash className='w-4 h-4 text-red-500' />
+            </Button>
+            <Button
+              variant='outline'
+              size='icon'
+              onClick={() => onShare(workout)}
+            >
+              <Share2Icon size={18} />
             </Button>
           </div>
         </div>

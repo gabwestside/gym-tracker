@@ -116,6 +116,23 @@ export default function DashboardPage() {
     setIsOpen(isOpen)
   }
 
+  const handleShare = (workout: Workout) => {
+    const formattedDate = dayjs(workout.date).format('DD/MM/YYYY')
+    const shareData = {
+      title: 'Meu treino 💪',
+      text: `Treino de ${workout.note} realizado no dia ${formattedDate}. Bora treinar também!`,
+      url: window.location.href,
+    }
+
+    if (navigator.share) {
+      navigator
+        .share(shareData)
+        .catch((err) => console.error('Erro ao compartilhar:', err))
+    } else {
+      toast.info('Compartilhamento não suportado nesse dispositivo.')
+    }
+  }
+
   return (
     <main className='min-h-screen bg-background text-foreground px-4 py-6 md:px-8 lg:px-16 xl:px-24'>
       <WorkoutModal
@@ -173,6 +190,7 @@ export default function DashboardPage() {
                   setIsEditing(workout)
                   setIsOpen(true)
                 }}
+                onShare={handleShare}
               />
 
               {/* Fixed buttons in the bottom of the page */}
