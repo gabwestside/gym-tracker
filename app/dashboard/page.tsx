@@ -1,20 +1,20 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
-import { supabase } from '@/lib/supabase'
-import { toast } from 'sonner'
-import dayjs from 'dayjs'
-import { WorkoutCalendar } from '@/components/workout-calendar'
-import { Session } from '@supabase/supabase-js'
-import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { LogOutIcon, PlusIcon } from 'lucide-react'
+import { ConfirmationAlert } from '@/components/confirmation-alert'
 import { Loading } from '@/components/loading'
+import { LogoutAlert } from '@/components/logout-alert'
 import { ThemeToggle } from '@/components/theme-toggle'
+import { Button } from '@/components/ui/button'
+import { WorkoutCalendar } from '@/components/workout-calendar'
 import { WorkoutCard } from '@/components/workout-card'
 import { WorkoutModal } from '@/components/workout-modal'
-import { ConfirmationAlert } from '@/components/confirmation-alert'
-import { LogoutAlert } from '@/components/logout-alert'
+import { supabase } from '@/lib/supabase'
+import { Session } from '@supabase/supabase-js'
+import dayjs from 'dayjs'
+import { LogOutIcon, PlusIcon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useCallback, useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 export type Workout = {
   id: string
@@ -116,6 +116,36 @@ export default function DashboardPage() {
     setIsOpen(isOpen)
   }
 
+  const handleShare = async (workout: Workout) => {
+    const { image_url, note, date, time } = workout
+
+    const text = `
+      ${note}
+      Realizado no dia ${dayjs(date).format('DD/MM/YYYY')} às ${time}.
+      Ficou motivado? Bora treinar também 💪🏋️‍♀️
+      https://gabweside-gym-tracker.vercel.app/
+    `.trim()
+
+    if (navigator.share) {
+      try {
+        const response = await fetch(image_url)
+        const blob = await response.blob()
+
+        const file = new File([blob], 'treino.jpg', { type: blob.type })
+
+        await navigator.share({
+          title: 'Confira meu treino 💪',
+          text,
+          files: [file],
+        })
+      } catch (error) {
+        toast.error('Erro ao compartilhar o treino: ' + error)
+      }
+    } else {
+      toast.warning('Seu navegador não suporta compartilhamento com imagem.')
+    }
+  }
+
   return (
     <main className='min-h-screen bg-background text-foreground px-4 py-6 md:px-8 lg:px-16 xl:px-24'>
       <WorkoutModal
@@ -173,6 +203,7 @@ export default function DashboardPage() {
                   setIsEditing(workout)
                   setIsOpen(true)
                 }}
+                onShare={handleShare}
               />
 
               {/* Fixed buttons in the bottom of the page */}
