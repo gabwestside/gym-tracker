@@ -118,33 +118,37 @@ export default function DashboardPage() {
 
   const handleShare = async (workout: Workout) => {
     const { image_url, note, date, time } = workout
-
+    
     const baseUrl = 'https://gabweside-gym-tracker.vercel.app/'
 
-    const text =
-      `Hoje foi dia de ${note.toLowerCase()}, realizado no dia ${dayjs(
-        date
-      ).format(
-        'DD/MM/YYYY'
-      )} às ${time}.\nFicou motivado? Bora treinar também 💪🏋️‍♀️\n${baseUrl}`.trim()
+    const formattedDate = dayjs(date).format('D [de] MMMM')
+    const formattedTime = time?.slice(0, 5)
 
-    if (navigator.share) {
-      try {
-        const response = await fetch(image_url)
-        const blob = await response.blob()
+    const text = `Foi dia de ${note.toLowerCase()}, realizado no dia ${formattedDate} às ${formattedTime}. \n\nFicou motivado? Bora treinar também 💪🏋️‍♀️\n${baseUrl}`.trim()
 
-        const file = new File([blob], 'treino.jpg', { type: blob.type })
+    if (!navigator.share) {
+      toast.warning('Seu navegador não suporta compartilhamento.')
+      return
+    }
 
+    try {
+      const response = await fetch(image_url)
+      const blob = await response.blob()
+      const file = new File([blob], `treino-${workout.id}.jpg`, {
+        type: blob.type,
+      })
+
+      if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({
           title: 'Confira meu treino 💪',
           text,
           files: [file],
         })
-      } catch (error) {
-        toast.error('Erro ao compartilhar o treino: ' + error)
+      } else {
+        toast.warning('Seu navegador não suporta compartilhamento com imagem.')
       }
-    } else {
-      toast.warning('Seu navegador não suporta compartilhamento com imagem.')
+    } catch (error) {
+      toast.error('Erro ao compartilhar o treino: ' + error)
     }
   }
 
