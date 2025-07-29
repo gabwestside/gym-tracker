@@ -119,12 +119,14 @@ export default function DashboardPage() {
   const handleShare = async (workout: Workout) => {
     const { image_url, note, date, time } = workout
 
-    const text = `
-      ${note}
-      Realizado no dia ${dayjs(date).format('DD/MM/YYYY')} às ${time}.
-      Ficou motivado? Bora treinar também 💪🏋️‍♀️
-      https://gabweside-gym-tracker.vercel.app/
-    `.trim()
+    const baseUrl = 'https://gabweside-gym-tracker.vercel.app/'
+
+    const text =
+      `Hoje foi dia de ${note.toLowerCase()}, realizado no dia ${dayjs(
+        date
+      ).format(
+        'DD/MM/YYYY'
+      )} às ${time}.\nFicou motivado? Bora treinar também 💪🏋️‍♀️\n${baseUrl}`.trim()
 
     if (navigator.share) {
       try {
