@@ -117,14 +117,17 @@ export default function DashboardPage() {
   }
 
   const handleShare = async (workout: Workout) => {
+    setLoading(true)
+
     const { image_url, note, date, time } = workout
-    
+
     const baseUrl = 'https://gabweside-gym-tracker.vercel.app/'
 
     const formattedDate = dayjs(date).format('D [de] MMMM')
     const formattedTime = time?.slice(0, 5)
 
-    const text = `Foi dia de ${note.toLowerCase()}, realizado no dia ${formattedDate} às ${formattedTime}. \n\nFicou motivado? Bora treinar também 💪🏋️‍♀️\n${baseUrl}`.trim()
+    const text =
+      `Foi dia de ${note.toLowerCase()}, realizado no dia ${formattedDate} às ${formattedTime}. \n\nFicou motivado? Bora treinar também 💪🏋️‍♀️\n${baseUrl}`.trim()
 
     if (!navigator.share) {
       toast.warning('Seu navegador não suporta compartilhamento.')
@@ -149,6 +152,8 @@ export default function DashboardPage() {
       }
     } catch (error) {
       toast.error('Erro ao compartilhar o treino: ' + error)
+    } finally {
+      setLoading(false)
     }
   }
 
