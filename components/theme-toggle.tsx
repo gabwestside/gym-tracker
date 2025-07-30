@@ -1,20 +1,25 @@
 'use client'
 
-import { useTheme } from 'next-themes'
+import { Switch } from '@/components/ui/switch'
 import { Moon, Sun } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { useTheme } from 'next-themes'
+import { HTMLAttributes } from 'react'
 
-export function ThemeToggle() {
+export const ThemeToggle = (props: HTMLAttributes<HTMLButtonElement>) => {
   const { theme, setTheme } = useTheme()
+  const isDark = theme === 'dark'
 
   return (
-    <Button
-      variant='outline'
-      size='icon'
-      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+    <button
+      onClick={() => setTheme(isDark ? 'light' : 'dark')}
+      aria-label='Toggle theme'
+      {...props}
+      className='flex items-center gap-2 mx-3'
     >
-      {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+      {isDark ? <Sun size={18} /> : <Moon size={18} />}
       <span className='sr-only'>Toggle theme</span>
-    </Button>
+      {isDark ? 'Claro' : 'Escuro'}
+      <Switch checked={isDark} className='ml-auto cursor-pointer' />
+    </button>
   )
 }

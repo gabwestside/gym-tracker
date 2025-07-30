@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL
+const baseUrl = `${process.env.NEXT_PUBLIC_APP_URL}` || 'gabweside-gym-tracker.vercel.app/'
 
 export default function RegisterPage() {
   const router = useRouter()
