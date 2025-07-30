@@ -18,7 +18,7 @@ export const StreakButton = ({ streakCount }: StreakButtonProps) => {
 
   return (
     <Button
-      content='Ofensiva'
+      title='Sua sequencia'
       className='bg-transparent hover:bg-transparent text-muted-foreground flex items-center gap-0'
     >
       <Icon size={18} className={`mr-2 ${iconClass}`} />

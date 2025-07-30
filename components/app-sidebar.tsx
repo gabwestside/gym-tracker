@@ -1,6 +1,5 @@
 'use client'
 
-import { NavMain } from '@/components/nav-main'
 import { NavSecondary } from '@/components/nav-secondary'
 import { NavUser } from '@/components/nav-user'
 import {
@@ -12,25 +11,15 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
+import { User } from '@/lib/types'
 import { SquareArrowUpLeft } from 'lucide-react'
 import * as React from 'react'
 
-const data = {
-  user: {
-    name: 'Gabriel Lima',
-    email: 'gabriel@mail.com',
-    avatar: '',
-  },
-  navMain: [
-    // {
-    //   title: 'Dashboard',
-    //   url: '#',
-    //   icon: LayoutDashboard,
-    // },
-  ],
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  user: User
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ user, ...props }: AppSidebarProps) {
   return (
     <Sidebar collapsible='offcanvas' {...props}>
       <SidebarHeader>
@@ -49,11 +38,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        {/* <NavMain
+          items={[
+            {
+              title: 'Dashboard',
+              url: '#',
+              icon: LayoutDashboard,
+            },
+          ]}
+        /> */}
         <NavSecondary className='mt-auto' />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
   )

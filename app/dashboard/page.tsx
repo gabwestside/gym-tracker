@@ -4,15 +4,17 @@ import { AppSidebar } from '@/components/app-sidebar'
 import { ConfirmationAlert } from '@/components/confirmation-alert'
 import { Header } from '@/components/header'
 import { Loading } from '@/components/loading'
+import { PreviewModal } from '@/components/preview-modal'
 import { Button } from '@/components/ui/button'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { WorkoutCalendar } from '@/components/workout-calendar'
 import { WorkoutCard } from '@/components/workout-card'
 import { WorkoutModal } from '@/components/workout-modal'
 import { normalizeToLocal } from '@/lib/date-pattern'
+import { shareWorkout } from '@/lib/share-workout'
 import { calculateStreak } from '@/lib/streak-count'
 import { supabase } from '@/lib/supabase'
-import { Workout } from '@/lib/types'
+import { User, Workout } from '@/lib/types'
 import { Session } from '@supabase/supabase-js'
 import dayjs from 'dayjs'
 import { PlusIcon } from 'lucide-react'
@@ -28,7 +30,14 @@ export default function DashboardPage() {
   const [isEditing, setIsEditing] = useState<Workout | null>(null)
   const [isDeleting, setIsDeleting] = useState<Workout | null>(null)
   const [isOpen, setIsOpen] = useState(false)
+  const [shareModalOpen, setShareModalOpen] = useState(false)
+  const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null)
   const [streakCount, setStreakCount] = useState(0)
+  const [user, setUser] = useState<User>({
+    name: '',
+    email: '',
+    avatar: '',
+  })
 
   const router = useRouter()
   const userId = session?.user?.id
@@ -41,6 +50,11 @@ export default function DashboardPage() {
     if (!currentSession.user.email_confirmed_at) return router.push('/verify')
 
     setSession(currentSession)
+    setUser({
+      name: currentSession.user.user_metadata.name || '',
+      email: currentSession.user.email || '',
+      avatar: currentSession.user.user_metadata.avatar_url || '',
+    })
     await fetchWorkouts(currentSession.user.id)
   }, [router])
 
@@ -112,45 +126,20 @@ export default function DashboardPage() {
     setIsOpen(isOpen)
   }
 
+  const handleEdit = (workout: Workout) => {
+    setIsEditing(workout)
+    setIsOpen(true)
+  }
+
   const handleShare = async (workout: Workout) => {
     setLoading(true)
+    await shareWorkout(workout)
+    setLoading(false)
+  }
 
-    const { image_url, note, date, time } = workout
-
-    const baseUrl = 'https://gabweside-gym-tracker.vercel.app/'
-
-    const formattedDate = dayjs(date).format('D [de] MMMM')
-    const formattedTime = time?.slice(0, 5)
-
-    const text =
-      `Foi dia de ${note.toLowerCase()}, realizado no dia ${formattedDate} às ${formattedTime}. \n\nFicou motivado? Bora treinar também 💪🏋️‍♀️\n${baseUrl}`.trim()
-
-    if (!navigator.share) {
-      toast.warning('Seu navegador não suporta compartilhamento.')
-      return
-    }
-
-    try {
-      const response = await fetch(image_url)
-      const blob = await response.blob()
-      const file = new File([blob], `treino-${workout.id}.jpg`, {
-        type: blob.type,
-      })
-
-      if (navigator.canShare?.({ files: [file] })) {
-        await navigator.share({
-          title: 'Confira meu treino 💪',
-          text,
-          files: [file],
-        })
-      } else {
-        toast.warning('Seu navegador não suporta compartilhamento com imagem.')
-      }
-    } catch (error) {
-      toast.error('Erro ao compartilhar o treino: ' + error)
-    } finally {
-      setLoading(false)
-    }
+  const handlePreview = (workout: Workout) => {
+    setSelectedWorkout(workout)
+    setShareModalOpen(true)
   }
 
   return (
@@ -162,7 +151,7 @@ export default function DashboardPage() {
         } as React.CSSProperties
       }
     >
-      <AppSidebar variant='inset' />
+      <AppSidebar variant='inset' user={user} />
 
       <SidebarInset>
         <main className='min-h-screen bg-background text-foreground p-2 md:px-4 lg:px-8 xl:px-16'>
@@ -182,6 +171,12 @@ export default function DashboardPage() {
             onCancel={() => setIsDeleting(null)}
           />
 
+          <PreviewModal
+            open={shareModalOpen}
+            onOpenChange={setShareModalOpen}
+            workout={selectedWorkout}
+          />
+
           {loading ? (
             <Loading />
           ) : (
@@ -199,17 +194,15 @@ export default function DashboardPage() {
                   <WorkoutCard
                     workouts={workouts}
                     onDelete={setIsDeleting}
-                    onEdit={(workout) => {
-                      setIsEditing(workout)
-                      setIsOpen(true)
-                    }}
+                    onEdit={handleEdit}
                     onShare={handleShare}
+                    onPreview={handlePreview}
                   />
 
                   <div className='sticky bottom-0 bg-background/90 backdrop-blur border-t p-4 rounded-t-lg'>
                     <Button
                       onClick={handleAddWorkout}
-                      className='w-full bg-foreground flex items-center justify-center gap-2'
+                      className='w-full bg-foreground flex items-center justify-center gap-2 cursor-pointer'
                     >
                       <PlusIcon size={18} />
                       Adicionar Treino
