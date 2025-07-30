@@ -37,7 +37,7 @@ export function WorkoutCard({
         >
           <div className='flex justify-between items-center mb-2 flex-wrap gap-2'>
             {workout.note && (
-              <span className='text-xs font-semibold px-2 py-1 bg-green-200 text-green-800 rounded-full'>
+              <span className='text-xs font-semibold px-2 py-1 bg-accent text-foreground rounded-full'>
                 {workout.note}
               </span>
             )}
