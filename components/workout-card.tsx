@@ -1,6 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import { normalizeToLocal } from '@/lib/date-pattern'
 import { Workout } from '@/lib/types'
 import dayjs from 'dayjs'
 import 'dayjs/locale/pt-br'
@@ -41,7 +42,7 @@ export function WorkoutCard({
               </span>
             )}
             <span className='text-sm text-muted-foreground'>
-              {dayjs(workout.date).format('D [de] MMMM')}
+              {dayjs(normalizeToLocal(workout.date)).format('D [de] MMMM')}
               {workout.time && ` às ${workout.time.slice(0, 5)}`}
             </span>
           </div>

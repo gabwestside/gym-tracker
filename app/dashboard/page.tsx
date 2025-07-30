@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { WorkoutCalendar } from '@/components/workout-calendar'
 import { WorkoutCard } from '@/components/workout-card'
 import { WorkoutModal } from '@/components/workout-modal'
+import { normalizeToLocal } from '@/lib/date-pattern'
 import { calculateStreak } from '@/lib/streak-count'
 import { supabase } from '@/lib/supabase'
 import { Workout } from '@/lib/types'
@@ -63,10 +64,10 @@ export default function DashboardPage() {
 
     setWorkouts(data || [])
     setHasWorkoutDays(
-      data?.map((w) => dayjs(w.date).format('YYYY-MM-DD')) || []
+      data?.map((w) => dayjs(normalizeToLocal(w.date)).format('YYYY-MM-DD')) || []
     )
 
-    const dates = data.map((w) => w.date)
+    const dates = data.map((w) => normalizeToLocal(w.date))
     const streak = calculateStreak(dates)
     setStreakCount(streak)
 
