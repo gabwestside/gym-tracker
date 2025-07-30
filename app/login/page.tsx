@@ -44,12 +44,12 @@ export default function LoginPage() {
           className='mb-2'
         />
 
-          <a
-            href='#'
-            className='ml-auto -mt-6 -mb-4 inline-block text-sm underline-offset-4 hover:underline'
-          >
-            Esqueceu sua senha?
-          </a>
+        {/* <a
+          href='#'
+          className='ml-auto -mt-6 -mb-4 inline-block text-sm underline-offset-4 hover:underline'
+        >
+          Esqueceu sua senha?
+        </a> */}
 
         <Input
           type='password'

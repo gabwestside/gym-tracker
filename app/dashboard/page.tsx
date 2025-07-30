@@ -1,28 +1,22 @@
 'use client'
 
 import { ConfirmationAlert } from '@/components/confirmation-alert'
+import { Header } from '@/components/header'
 import { Loading } from '@/components/loading'
 import { LogoutAlert } from '@/components/logout-alert'
-import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
 import { WorkoutCalendar } from '@/components/workout-calendar'
 import { WorkoutCard } from '@/components/workout-card'
 import { WorkoutModal } from '@/components/workout-modal'
+import { calculateStreak } from '@/lib/streak-count'
 import { supabase } from '@/lib/supabase'
+import { Workout } from '@/lib/types'
 import { Session } from '@supabase/supabase-js'
 import dayjs from 'dayjs'
 import { LogOutIcon, PlusIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
-
-export type Workout = {
-  id: string
-  date: string
-  time: string
-  note: string
-  image_url: string
-}
 
 export default function DashboardPage() {
   const [workouts, setWorkouts] = useState<Workout[]>([])
@@ -33,6 +27,7 @@ export default function DashboardPage() {
   const [isDeleting, setIsDeleting] = useState<Workout | null>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [isLogout, setIsLogout] = useState(false)
+  const [streakCount, setStreakCount] = useState(0)
 
   const router = useRouter()
   const userId = session?.user?.id
@@ -70,6 +65,11 @@ export default function DashboardPage() {
     setHasWorkoutDays(
       data?.map((w) => dayjs(w.date).format('YYYY-MM-DD')) || []
     )
+
+    const dates = data.map((w) => w.date)
+    const streak = calculateStreak(dates)
+    setStreakCount(streak)
+
     setLoading(false)
   }
 
@@ -187,17 +187,9 @@ export default function DashboardPage() {
         <Loading />
       ) : (
         <div className='mx-auto w-full max-w-7xl space-y-6'>
-          {/* Header */}
-          <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
-            <div>
-              <h1 className='text-xl font-bold'>
-                Bem-vindo, {session?.user?.email || 'Usuário'}
-              </h1>
-              <p className='text-sm text-muted-foreground'>Seus Treinos</p>
-            </div>
-            <ThemeToggle />
-          </div>
+          <Header streakCount={streakCount} />
 
+          <p className='text-sm text-muted-foreground'>Seus Treinos</p>
           {/* Grid Content */}
           <div className='grid gap-6 md:grid-cols-[400px_1fr]'>
             {/* Calendar in the left */}

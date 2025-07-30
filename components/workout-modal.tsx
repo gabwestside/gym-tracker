@@ -1,6 +1,5 @@
 'use client'
 
-import { Workout } from '@/app/dashboard/page'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -12,6 +11,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { supabase } from '@/lib/supabase'
+import { Workout } from '@/lib/types'
 import { motion } from 'framer-motion'
 import { X } from 'lucide-react'
 import Image from 'next/image'
