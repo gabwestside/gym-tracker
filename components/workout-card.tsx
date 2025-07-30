@@ -10,19 +10,23 @@ import Image from 'next/image'
 
 dayjs.locale('pt-br')
 
+interface WorkoutCardPros extends React.HTMLAttributes<HTMLDivElement> {
+  workouts: Workout[]
+  onDelete: (workout: Workout) => void
+  onEdit: (workout: Workout) => void
+  onShare: (workout: Workout) => void
+  onPreview: (workout: Workout) => void
+}
+
 export function WorkoutCard({
   workouts,
   onDelete,
   onEdit,
   onShare,
-}: {
-  workouts: Workout[]
-  onDelete: (workout: Workout) => void
-  onEdit: (workout: Workout) => void
-  onShare: (workout: Workout) => void
-}) {
+  onPreview,
+}: WorkoutCardPros) {
   return workouts.length === 0 ? (
-    <div className='rounded-lg border p-4 shadow-sm bg-green-100'>
+    <div className='rounded-lg border p-4 shadow-sm bg-card'>
       <p className='p-4 text-base mb-2 text-center'>
         Nenhum treino registrado ainda.
       </p>
@@ -33,7 +37,7 @@ export function WorkoutCard({
         <div
           id={`workout-card-${workout.id}`}
           key={workout.id}
-          className='rounded-lg border p-4 shadow-md transition-colors bg-white dark:bg-zinc-900'
+          className='rounded-lg border p-4 shadow-md transition-colors bg-card'
         >
           <div className='flex justify-between items-center mb-2 flex-wrap gap-2'>
             {workout.note && (
@@ -51,9 +55,10 @@ export function WorkoutCard({
             <Image
               src={workout.image_url}
               alt='Foto do treino'
-              className='rounded-md w-full max-h-72 object-cover hover:scale-[1.015] transition-transform shadow-sm'
+              className='rounded-md w-full max-h-72 object-cover hover:scale-[1.015] transition-transform shadow-sm cursor-pointer'
               width={800}
               height={600}
+              onClick={() => onPreview(workout)}
             />
           )}
 

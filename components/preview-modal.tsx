@@ -5,45 +5,36 @@ import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { Workout } from '@/lib/types'
-import dayjs from 'dayjs'
 import { DialogTitle } from '@radix-ui/react-dialog'
+import { Share, Copy } from 'lucide-react'
+import { shareWorkout } from '@/lib/share-workout'
 
-type ShareWorkoutModalProps = {
+interface PreviewModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   workout: Workout | null
 }
 
-const baseUrl =
-  process.env.NEXT_PUBLIC_BASE_URL ||
-  'https://gabweside-gym-tracker.vercel.app/'
-
-export function ShareWorkoutModal({
+export function PreviewModal({
   open,
   onOpenChange,
   workout,
-}: ShareWorkoutModalProps) {
+}: PreviewModalProps) {
   if (!workout) return null
 
-  const formattedText =
-    `Hoje foi dia de ${workout.note.toLowerCase()}, realizado no dia ${dayjs(
-      workout.date
-    ).format('DD/MM/YYYY')} às ${
-      workout.time
-    }.\nFicou motivado? Bora treinar também 💪🏋️‍♀️\n${baseUrl}`.trim()
+  const formattedText = `O treino de hoje foi brabo ein? 🔥
+    A foto ficou muito boa! 😎
+
+    Que tal compartilhar e motivar mais pessoas a treinar? 💪
+    `.trim()
 
   const handleCopy = () => {
     navigator.clipboard.writeText(formattedText)
     toast.success('Texto copiado para a área de transferência!')
   }
 
-  const handleDownload = async () => {
-    const link = document.createElement('a')
-    link.href = workout.image_url
-    link.download = 'treino.png'
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+  const handleShare = async () => {
+    await shareWorkout(workout)
   }
 
   return (
@@ -62,9 +53,12 @@ export function ShareWorkoutModal({
 
         <div className='flex gap-2 justify-center'>
           <Button onClick={handleCopy} variant='outline'>
-            📋 Copiar Texto
+            <Copy /> Copiar Texto
           </Button>
-          <Button onClick={handleDownload}>📥 Baixar Imagem</Button>
+          <Button onClick={handleShare}>
+            <Share />
+            Compartilhar
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
