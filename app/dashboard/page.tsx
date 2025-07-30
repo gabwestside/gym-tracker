@@ -1,19 +1,22 @@
 'use client'
 
+import { AppSidebar } from '@/components/app-sidebar'
 import { ConfirmationAlert } from '@/components/confirmation-alert'
+import { Header } from '@/components/header'
 import { Loading } from '@/components/loading'
-import { LogoutAlert } from '@/components/logout-alert'
 import { ShareWorkoutModal } from '@/components/share-workout-modal'
-import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { WorkoutCalendar } from '@/components/workout-calendar'
 import { WorkoutCard } from '@/components/workout-card'
 import { WorkoutModal } from '@/components/workout-modal'
+import { normalizeToLocal } from '@/lib/date-pattern'
+import { calculateStreak } from '@/lib/streak-count'
 import { supabase } from '@/lib/supabase'
-import { Workout } from '@/lib/types'
+import { User, Workout } from '@/lib/types'
 import { Session } from '@supabase/supabase-js'
 import dayjs from 'dayjs'
-import { LogOutIcon, PlusIcon } from 'lucide-react'
+import { PlusIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -26,9 +29,14 @@ export default function DashboardPage() {
   const [isEditing, setIsEditing] = useState<Workout | null>(null)
   const [isDeleting, setIsDeleting] = useState<Workout | null>(null)
   const [isOpen, setIsOpen] = useState(false)
-  const [isLogout, setIsLogout] = useState(false)
   const [shareModalOpen, setShareModalOpen] = useState(false)
   const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null)
+  const [streakCount, setStreakCount] = useState(0)
+  const [user, setUser] = useState<User>({
+    name: '',
+    email: '',
+    avatar: '',
+  })
 
   const router = useRouter()
   const userId = session?.user?.id
@@ -41,6 +49,11 @@ export default function DashboardPage() {
     if (!currentSession.user.email_confirmed_at) return router.push('/verify')
 
     setSession(currentSession)
+    setUser({
+      name: currentSession.user.user_metadata.name || '',
+      email: currentSession.user.email || '',
+      avatar: currentSession.user.user_metadata.avatar_url || '',
+    })
     await fetchWorkouts(currentSession.user.id)
   }, [router])
 
@@ -64,15 +77,15 @@ export default function DashboardPage() {
 
     setWorkouts(data || [])
     setHasWorkoutDays(
-      data?.map((w) => dayjs(w.date).format('YYYY-MM-DD')) || []
+      data?.map((w) => dayjs(normalizeToLocal(w.date)).format('YYYY-MM-DD')) ||
+        []
     )
-    setLoading(false)
-  }
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-    setLoading(true)
-    router.push('/login')
+    const dates = data.map((w) => normalizeToLocal(w.date))
+    const streak = calculateStreak(dates)
+    setStreakCount(streak)
+
+    setLoading(false)
   }
 
   const handleAddWorkout = () => {
@@ -116,127 +129,120 @@ export default function DashboardPage() {
     setSelectedWorkout(workout)
     setShareModalOpen(true)
 
+    // setLoading(true)
+
     // const { image_url, note, date, time } = workout
 
-    // const baseUrl =
-    //   process.env.NEXT_PUBLIC_BASE_URL ||
-    //   'https://gabweside-gym-tracker.vercel.app/'
+    // const baseUrl = 'https://gabweside-gym-tracker.vercel.app/'
+
+    // const formattedDate = dayjs(date).format('D [de] MMMM')
+    // const formattedTime = time?.slice(0, 5)
 
     // const text =
-    //   `Hoje foi dia de ${note.toLowerCase()}, realizado no dia ${dayjs(
-    //     date
-    //   ).format(
-    //     'DD/MM/YYYY'
-    //   )} às ${time}.\nFicou motivado? Bora treinar também 💪🏋️‍♀️\n${baseUrl}`.trim()
+    //   `Foi dia de ${note.toLowerCase()}, realizado no dia ${formattedDate} às ${formattedTime}. \n\nFicou motivado? Bora treinar também 💪🏋️‍♀️\n${baseUrl}`.trim()
 
-    // if (navigator.share) {
-    //   try {
-    //     const response = await fetch(image_url)
-    //     const blob = await response.blob()
+    // if (!navigator.share) {
+    //   toast.warning('Seu navegador não suporta compartilhamento.')
+    //   return
+    // }
 
-    //     const file = new File([blob], 'treino.jpg', { type: blob.type })
+    // try {
+    //   const response = await fetch(image_url)
+    //   const blob = await response.blob()
+    //   const file = new File([blob], `treino-${workout.id}.jpg`, {
+    //     type: blob.type,
+    //   })
 
+    //   if (navigator.canShare?.({ files: [file] })) {
     //     await navigator.share({
     //       title: 'Confira meu treino 💪',
     //       text,
     //       files: [file],
     //     })
-    //   } catch (error) {
-    //     toast.error('Erro ao compartilhar o treino: ' + error)
+    //   } else {
+    //     toast.warning('Seu navegador não suporta compartilhamento com imagem.')
     //   }
-    // } else {
-    //   toast.warning('Seu navegador não suporta compartilhamento com imagem.')
+    // } catch (error) {
+    //   toast.error('Erro ao compartilhar o treino: ' + error)
+    // } finally {
+    //   setLoading(false)
     // }
   }
 
   return (
-    <main className='min-h-screen bg-background text-foreground px-4 py-6 md:px-8 lg:px-16 xl:px-24'>
-      <WorkoutModal
-        open={isOpen}
-        onOpenChange={handleCleanUp}
-        workoutToEdit={isEditing}
-        onCompleted={handleWorkoutAction}
-        userId={userId || ''}
-      />
+    <SidebarProvider
+      style={
+        {
+          '--sidebar-width': 'calc(var(--spacing) * 72)',
+          '--header-height': 'calc(var(--spacing) * 12)',
+        } as React.CSSProperties
+      }
+    >
+      <AppSidebar variant='inset' user={user} />
 
-      <ConfirmationAlert
-        open={!!isDeleting}
-        title='Tem certeza que deseja deletar esse treino?'
-        description='Essa ação não pode ser desfeita.'
-        onCompleted={handleDeleteWorkout}
-        onCancel={() => setIsDeleting(null)}
-      />
+      <SidebarInset>
+        <main className='min-h-screen bg-background text-foreground p-2 md:px-4 lg:px-8 xl:px-16'>
+          <WorkoutModal
+            open={isOpen}
+            onOpenChange={handleCleanUp}
+            workoutToEdit={isEditing}
+            onCompleted={handleWorkoutAction}
+            userId={userId || ''}
+          />
 
-      <LogoutAlert
-        isOpen={isLogout}
-        title='Tem certeza que deseja sair?'
-        description=''
-        onCompleted={handleLogout}
-        onOpenChange={() => setIsLogout(false)}
-      />
+          <ConfirmationAlert
+            open={!!isDeleting}
+            title='Tem certeza que deseja deletar esse treino?'
+            description='Essa ação não pode ser desfeita.'
+            onCompleted={handleDeleteWorkout}
+            onCancel={() => setIsDeleting(null)}
+          />
 
-      <ShareWorkoutModal
-        open={shareModalOpen}
-        onOpenChange={setShareModalOpen}
-        workout={selectedWorkout}
-      />
+          <ShareWorkoutModal
+            open={shareModalOpen}
+            onOpenChange={setShareModalOpen}
+            workout={selectedWorkout}
+          />
 
-      {loading ? (
-        <Loading />
-      ) : (
-        <div className='mx-auto w-full max-w-7xl space-y-6'>
-          {/* Header */}
-          <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
-            <div>
-              <h1 className='text-xl font-bold'>
-                Bem-vindo, {session?.user?.email || 'Usuário'}
-              </h1>
+          {loading ? (
+            <Loading />
+          ) : (
+            <div className='mx-auto w-full max-w-7xl space-y-6'>
+              <Header streakCount={streakCount} />
+
               <p className='text-sm text-muted-foreground'>Seus Treinos</p>
-            </div>
-            <ThemeToggle />
-          </div>
 
-          {/* Grid Content */}
-          <div className='grid gap-6 md:grid-cols-[400px_1fr]'>
-            {/* Calendar in the left */}
-            <section className='rounded-lg border bg-card p-4 shadow-sm w-full'>
-              <WorkoutCalendar hasWorkoutDays={hasWorkoutDays} />
-            </section>
+              <div className='grid gap-6 md:grid-cols-[300px_1fr]'>
+                <section className='rounded-lg border bg-card p-4 shadow-sm w-full'>
+                  <WorkoutCalendar hasWorkoutDays={hasWorkoutDays} />
+                </section>
 
-            {/* List of workouts in the right */}
-            <section className='flex flex-col gap-4'>
-              <WorkoutCard
-                workouts={workouts}
-                onDelete={setIsDeleting}
-                onEdit={(workout) => {
-                  setIsEditing(workout)
-                  setIsOpen(true)
-                }}
-                onShare={handleShare}
-              />
+                <section className='flex flex-col gap-4'>
+                  <WorkoutCard
+                    workouts={workouts}
+                    onDelete={setIsDeleting}
+                    onEdit={(workout) => {
+                      setIsEditing(workout)
+                      setIsOpen(true)
+                    }}
+                    onShare={handleShare}
+                  />
 
-              {/* Fixed buttons in the bottom of the page */}
-              <div className='sticky bottom-0 bg-background/90 backdrop-blur border-t p-4 space-y-2 rounded-t-lg'>
-                <Button
-                  onClick={handleAddWorkout}
-                  className='w-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-2'
-                >
-                  <PlusIcon size={18} />
-                  Adicionar Treino
-                </Button>
-
-                <Button
-                  onClick={() => setIsLogout(true)}
-                  className='w-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center gap-2'
-                >
-                  <LogOutIcon size={18} />
-                  Sair
-                </Button>
+                  <div className='sticky bottom-0 bg-background/90 backdrop-blur border-t p-4 rounded-t-lg'>
+                    <Button
+                      onClick={handleAddWorkout}
+                      className='w-full bg-foreground flex items-center justify-center gap-2'
+                    >
+                      <PlusIcon size={18} />
+                      Adicionar Treino
+                    </Button>
+                  </div>
+                </section>
               </div>
-            </section>
-          </div>
-        </div>
-      )}
-    </main>
+            </div>
+          )}
+        </main>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }

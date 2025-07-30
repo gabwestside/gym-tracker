@@ -9,7 +9,9 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Textarea } from '@/components/ui/textarea'
+import { UploadButton } from '@/components/upload-button'
 import { supabase } from '@/lib/supabase'
 import { Workout } from '@/lib/types'
 import { motion } from 'framer-motion'
@@ -17,8 +19,6 @@ import { X } from 'lucide-react'
 import Image from 'next/image'
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
-import { Skeleton } from './ui/skeleton'
-import { UploadButton } from './upload-button'
 
 interface WorkoutModalProps {
   trigger?: React.ReactNode
