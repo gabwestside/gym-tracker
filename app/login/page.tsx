@@ -1,12 +1,12 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
-import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { supabase } from '@/lib/supabase'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -43,7 +43,14 @@ export default function LoginPage() {
           onChange={(e) => setEmail(e.target.value)}
           className='mb-2'
         />
-        
+
+          <a
+            href='#'
+            className='ml-auto -mt-6 -mb-4 inline-block text-sm underline-offset-4 hover:underline'
+          >
+            Esqueceu sua senha?
+          </a>
+
         <Input
           type='password'
           placeholder='Sua senha'
