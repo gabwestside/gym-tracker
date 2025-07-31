@@ -14,6 +14,7 @@ import {
 import { User } from '@/lib/types'
 import { SquareArrowUpLeft } from 'lucide-react'
 import * as React from 'react'
+import { LanguageToggle } from './theme-toggler'
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   user: User
@@ -24,7 +25,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
     <Sidebar collapsible='offcanvas' {...props}>
       <SidebarHeader>
         <SidebarMenu>
-          <SidebarMenuItem>
+          <SidebarMenuItem className='flex'>
             <SidebarMenuButton
               asChild
               className='data-[slot=sidebar-menu-button]:!p-1.5'
@@ -34,18 +35,21 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                 <span className='text-base font-semibold'>Wstside Inc.</span>
               </a>
             </SidebarMenuButton>
+            <LanguageToggle />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         {/* <NavMain
-          items={[
-            {
-              title: 'Dashboard',
-              url: '#',
-              icon: LayoutDashboard,
-            },
-          ]}
+          items={
+            [
+              {
+                title: 'Dashboard',
+                url: '#',
+                icon: LayoutDashboard,
+              },
+            ]
+          }
         /> */}
         <NavSecondary className='mt-auto' />
       </SidebarContent>

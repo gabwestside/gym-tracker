@@ -18,7 +18,7 @@
     "confirmPassword": "Confirm your password",
     "button": "Register",
     "loadButton": "Registering...",
-    "alreadyHaveAccount": "Already have an account?",
+    "alreadyHaveAccount": "Already have an account? ",
     "login": "Sign in",
     "registerError": "Error registering:",
     "registerSuccess": "Account created! Check your e-mail."

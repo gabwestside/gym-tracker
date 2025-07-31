@@ -4,7 +4,7 @@
     "email": "Seu e-mail",
     "password": "Sua senha",
     "button": "Entrar",
-    "noAccount": "Ainda não tem conta?",
+    "noAccount": "Ainda não tem conta? ",
     "createAccount": "Criar conta",
     "loadButton": "Entrando...",
     "signinError": "Erro ao logar",
