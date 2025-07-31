@@ -186,7 +186,7 @@ export default function DashboardPage() {
               <p className='text-sm text-muted-foreground'>Seus Treinos</p>
 
               <div className='grid gap-6 md:grid-cols-[300px_1fr]'>
-                <section className='rounded-lg border bg-card p-4 shadow-sm w-full'>
+                <section className='rounded-lg border bg-card p-4 shadow-sm w-full min-h-64'>
                   <WorkoutCalendar hasWorkoutDays={hasWorkoutDays} />
                 </section>
 
@@ -202,6 +202,7 @@ export default function DashboardPage() {
                   <div className='sticky bottom-0 bg-background/90 backdrop-blur border-t p-4 rounded-t-lg'>
                     <Button
                       onClick={handleAddWorkout}
+                      variant='outline'
                       className='w-full bg-foreground flex items-center justify-center gap-2 cursor-pointer'
                     >
                       <PlusIcon size={18} />
