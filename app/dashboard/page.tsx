@@ -203,7 +203,7 @@ export default function DashboardPage() {
                     <Button
                       onClick={handleAddWorkout}
                       variant='outline'
-                      className='w-full bg-foreground flex items-center justify-center gap-2 cursor-pointer'
+                      className='w-full dark:bg-transparent bg-transparent flex items-center justify-center gap-2 cursor-pointer'
                     >
                       <PlusIcon size={18} />
                       Adicionar Treino
