@@ -1,12 +1,13 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
-import { toast } from 'sonner'
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { supabase } from '@/lib/supabase'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL
 
@@ -67,9 +68,9 @@ export default function RegisterPage() {
 
         <p className='mt-4 text-sm text-center'>
           Já tem conta?{' '}
-          <a href='/login' className='text-blue-600 hover:underline'>
+          <Link href='/login' className='text-blue-600 hover:underline'>
             Faça seu login
-          </a>
+          </Link>
         </p>
       </Card>
     </main>

@@ -1,13 +1,14 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
-import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { supabase } from '@/lib/supabase'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
 export default function LoginPage() {
   const t = useTranslations('login')
@@ -45,7 +46,7 @@ export default function LoginPage() {
           onChange={(e) => setEmail(e.target.value)}
           className='mb-2'
         />
-        
+
         <Input
           type='password'
           placeholder={t('password')}
@@ -60,9 +61,9 @@ export default function LoginPage() {
 
         <p className='mt-4 text-sm text-center'>
           {t('noAccount')}{' '}
-          <a href='/register' className='text-blue-600 hover:underline'>
+          <Link href='/register' className='text-blue-600 hover:underline'>
             {t('createAccount')}
-          </a>
+          </Link>
         </p>
       </Card>
     </main>

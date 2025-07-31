@@ -1,7 +1,8 @@
+import { locales } from "@/config"
+
 const i18nConfig = {
-  locales: ['pt-BR', 'en'],
-  defaultLocale: 'pt-BR',
-  localeDetection: true,
+  locales,
+  defaultLocale: 'pt',
 }
 
 export default i18nConfig
