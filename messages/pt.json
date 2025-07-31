@@ -20,6 +20,21 @@
     "alreadyHaveAccount": "Já tem uma conta?",
     "login": "Entrar"
   },
+  "verify": {
+    "title": "Verifique seu e-mail",
+    "description": "Enviamos um link de confirmação para o seu endereço de e-mail. Clique no botão para ativar sua conta.",
+    "subtitle": "Após confirmar, você pode fazer login normalmente."
+  },
+  "confirmed": {
+    "title": "E-mail confirmado",
+    "description": "Você já confirmou seu e-mail. Agora pode acessar o sistema!",
+    "button": "Entrar"
+  },
+  "error": {
+    "title": "Erro",
+    "description": "Não foi possível recuperar a sessão. Tente novamente.",
+    "button": "Entrar novamente"
+  },
   "dashboard": {
     "welcome": "Bem-vindo, {email}",
     "yourWorkouts": "Seus Treinos",

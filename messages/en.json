@@ -34,7 +34,8 @@
     "button": "Enter"
   },
   "error": {
-    "title": "The session could not be recovered. Please try again.",
+    "title": "Error",
+    "description": "The session could not be recovered. Please try again.",
     "button": "Log in again"
   },
   "dashboard": {

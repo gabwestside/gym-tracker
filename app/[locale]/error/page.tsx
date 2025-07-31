@@ -1,20 +1,22 @@
-import Link from 'next/link'
+import { Card } from '@/components/ui/card'
+import { Link } from '@/i18n/navigation'
+import { useTranslations } from 'next-intl'
 
 export default function ErrorPage() {
+  const t = useTranslations('error')
+
   return (
-    <main className='flex min-h-screen items-center justify-center bg-gray-100 p-4'>
-      <div className='w-full max-w-md rounded bg-white p-6 shadow text-center'>
-        <h1 className='text-2xl font-bold mb-4 text-red-600'>Erro 💥</h1>
-        <p className='text-gray-600'>
-          {'Não foi possível recuperar a sessão. Tente novamente.'}
-        </p>
+    <main className='flex min-h-screen items-center justify-center bg-background text-foreground'>
+      <Card className='w-full flex flex-col justify-center items-center max-w-sm p-6 shadow-xl'>
+        <h1 className='text-2xl font-bold mb-4'>{t('title')} 💥</h1>
+        <p className='text-center'>{t('description')}</p>
         <Link
           href='/'
-          className='mt-6 inline-block bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded transition'
+          className='text-center inline-block bg-foreground w-full text-white dark:text-black py-2 px-4 rounded-md font-bold transition'
         >
-          Entrar novamente
+          {t('button')}
         </Link>
-      </div>
+      </Card>
     </main>
   )
 }
