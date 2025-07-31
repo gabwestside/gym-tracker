@@ -15,6 +15,8 @@ interface ConfirmationAlertProps {
   description?: string
   onCompleted: () => void
   onCancel: () => void
+  cancelButtonTitle: string
+  confirmButtonTitle: string
 }
 
 export const ConfirmationAlert = ({
@@ -23,6 +25,8 @@ export const ConfirmationAlert = ({
   description,
   onCompleted,
   onCancel,
+  cancelButtonTitle,
+  confirmButtonTitle,
 }: ConfirmationAlertProps) => {
   return (
     <AlertDialog open={open} onOpenChange={onCancel}>
@@ -32,9 +36,11 @@ export const ConfirmationAlert = ({
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onCanPlay={onCancel}>Cancelar</AlertDialogCancel>
+          <AlertDialogCancel onCanPlay={onCancel}>
+            {cancelButtonTitle}
+          </AlertDialogCancel>
           <AlertDialogAction className='bg-red-500' onClick={onCompleted}>
-            Sim
+            {confirmButtonTitle}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

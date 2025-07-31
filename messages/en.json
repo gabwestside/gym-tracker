@@ -39,20 +39,54 @@
     "button": "Log in again"
   },
   "dashboard": {
-    "welcome": "Welcome, {email}",
-    "yourWorkouts": "Your Workouts",
+    "title": "Your Workouts",
     "addWorkout": "Add Workout",
-    "logout": "Log out",
+    "streak": "Your streak",
+    "workoutsError": "Error fetching workouts.",
+    "deleteWorkoutError": "Error deleting workout.",
+    "deleteWorkoutSuccess": "Workout deleted successfully!",
     "deleteWorkoutTitle": "Are you sure you want to delete this workout?",
-    "deleteWorkoutDescription": "This action cannot be undone."
+    "deleteWorkoutDescription": "This action cannot be undone.",
+    "deleteWorkoutCancel": "Cancel",
+    "deleteWorkoutConfirm": "Yes"
+  },
+  "navUser": {
+    "account": "Account",
+    "logout": "Log out"
+  },
+  "langToggle": {
+    "en": "English",
+    "pt": "Portuguese"
+  },
+  "themeToggle": {
+    "dark": "Dark",
+    "light": "Light"
   },
   "workoutModal": {
-    "title": "Add Workout",
-    "name": "Workout Name",
-    "description": "Workout Description",
-    "exercises": "Exercises",
-    "addExercise": "Add Exercise",
-    "save": "Save Workout",
-    "cancel": "Cancel"
+    "addTitle": "Add Workout",
+    "editTitle": "Edit Workout",
+    "description": "What did you train today?",
+    "deleteImageTitle": "Remove image",
+    "addButton": "Add Workout",
+    "loadAddButton": "Adding...",
+    "editButton": "Edit Workout",
+    "loadEditButton": "Editing...",
+    "cancel": "Cancel",
+    "date": "The workout date is required.",
+    "time": "The workout time is required.",
+    "notes": "It's important to say what you trained today.",
+    "updatedSuccess": "Workout updated successfully!",
+    "registeredSuccess": "Workout added successfully!",
+    "generic": "Something went wrong.",
+    "withMessage": "Error: {message}"
+  },
+  "uploadButton": {
+    "button": "Upload",
+    "loadButton": "Uploading",
+    "publicError": "Failed to get public URL",
+    "success": "Image uploaded successfully!",
+    "loading": "Uploading image...",
+    "error": "An unknown error occurred.",
+    "sendError": "Upload failed: "
   }
 }

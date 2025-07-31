@@ -1,11 +1,14 @@
 import { Flame, Snowflake } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useTranslations } from 'next-intl'
 
 interface StreakButtonProps {
   streakCount: number
 }
 
 export const StreakButton = ({ streakCount }: StreakButtonProps) => {
+  const t = useTranslations("dashboard")
+
   const isMilestone = streakCount > 0 && streakCount % 50 === 0
   const isActive = streakCount > 0
 
@@ -18,7 +21,7 @@ export const StreakButton = ({ streakCount }: StreakButtonProps) => {
 
   return (
     <Button
-      title='Sua sequencia'
+      title={t('streak')}
       className='bg-transparent hover:bg-transparent text-muted-foreground flex items-center gap-0'
     >
       <Icon size={18} className={`mr-2 ${iconClass}`} />

@@ -7,18 +7,21 @@
     "noAccount": "Ainda não tem conta? ",
     "createAccount": "Criar conta",
     "loadButton": "Entrando...",
-    "signinError": "Erro ao logar",
+    "signinError": "Erro ao logar: ",
     "signinSuccess": "Login realizado com sucesso! Redirecionando...",
-    "forgotPassword": "Esqueceu sua senha?"
+    "forgotPassword": "Esqueceu sua senha? "
   },
   "register": {
-    "title": "Registrar",
+    "title": "Registre sua conta",
     "email": "Seu e-mail",
     "password": "Sua senha",
     "confirmPassword": "Confirme sua senha",
     "button": "Registrar",
-    "alreadyHaveAccount": "Já tem uma conta?",
-    "login": "Entrar"
+    "loadButton": "Registrando...",
+    "alreadyHaveAccount": "Já tem uma conta? ",
+    "login": "Entrar",
+    "registerError": "Erro ao registrar:",
+    "registerSuccess": "Conta criada! Verifique seu e-mail."
   },
   "verify": {
     "title": "Verifique seu e-mail",
@@ -36,20 +39,54 @@
     "button": "Entrar novamente"
   },
   "dashboard": {
-    "welcome": "Bem-vindo, {email}",
-    "yourWorkouts": "Seus Treinos",
+    "title": "Seus Treinos",
     "addWorkout": "Adicionar Treino",
-    "logout": "Sair",
+    "streak": "Sua sequencia",
+    "workoutsError": "Erro ao buscar treinos.",
+    "deleteWorkoutError": "Erro ao deletar treino.",
+    "deleteWorkoutSuccess": "Treino deletado com sucesso!",
     "deleteWorkoutTitle": "Tem certeza que deseja deletar esse treino?",
-    "deleteWorkoutDescription": "Essa ação não pode ser desfeita."
+    "deleteWorkoutDescription": "Essa ação não pode ser desfeita.",
+    "deleteWorkoutCancel": "Cancelar",
+    "deleteWorkoutConfirm": "Sim"
+  },
+  "navUser": {
+    "account": "Conta",
+    "logout": "Sair"
+  },
+  "langToggle": {
+    "en": "Inglês",
+    "pt": "Português"
+  },
+  "themeToggle": {
+    "dark": "Escuro",
+    "light": "Claro"
   },
   "workoutModal": {
-    "title": "Adicionar Treino",
-    "name": "Nome do Treino",
-    "description": "Descrição do Treino",
-    "exercises": "Exercícios",
-    "addExercise": "Adicionar Exercício",
-    "save": "Salvar Treino",
-    "cancel": "Cancelar"
+    "addTitle": "Registrar Treino",
+    "editTitle": "Editar Treino",
+    "description": "O que você treinou hoje?",
+    "deleteImageTitle": "Remover imagem",
+    "addButton": "Registrar Treino",
+    "loadAddButton": "Registrando...",
+    "editButton": "Editar Treino",
+    "loadEditButton": "Editando...",
+    "cancel": "Cancelar",
+    "date": "A data do treino é obrigatória.",
+    "time": "A hora do treino é obrigatória.",
+    "notes": "É importante dizer o que vc treinou hoje.",
+    "updatedSuccess": "Treino atualizado com sucesso!",
+    "registeredSuccess": "Treino registrado com sucesso!",
+    "generic": "Algo de errado.",
+    "withMessage": "Erro: {message}"
+  },
+  "uploadButton": {
+    "button": "Enviar",
+    "loadButton": "Enviando",
+    "publicError": "Falha ao obter a URL pública",
+    "success": "Imagem enviada com sucesso!",
+    "loading": "Enviando imagem...",
+    "error": "Um erro desconhecido ocorreu.",
+    "sendError": "Falha no envio: "
   }
 }

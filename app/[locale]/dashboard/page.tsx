@@ -18,11 +18,15 @@ import { User, Workout } from '@/lib/types'
 import { Session } from '@supabase/supabase-js'
 import dayjs from 'dayjs'
 import { PlusIcon } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 export default function DashboardPage() {
+  const t = useTranslations('dashboard')
+  const router = useRouter()
+
   const [workouts, setWorkouts] = useState<Workout[]>([])
   const [hasWorkoutDays, setHasWorkoutDays] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
@@ -39,7 +43,6 @@ export default function DashboardPage() {
     avatar: '',
   })
 
-  const router = useRouter()
   const userId = session?.user?.id
 
   const initializeSession = useCallback(async () => {
@@ -71,7 +74,7 @@ export default function DashboardPage() {
       .order('date', { ascending: false })
 
     if (error) {
-      toast.error('Erro ao buscar treinos.')
+      toast.error(t('workoutsError'))
       setLoading(false)
       return
     }
@@ -104,9 +107,9 @@ export default function DashboardPage() {
       .eq('id', isDeleting.id)
 
     if (error) {
-      toast.error('Erro ao deletar treino.')
+      toast.error(t('deleteWorkoutError'))
     } else {
-      toast.success('Treino deletado com sucesso!')
+      toast.success(t('deleteWorkoutSuccess'))
       await fetchWorkouts(userId || '')
     }
 
@@ -165,10 +168,12 @@ export default function DashboardPage() {
 
           <ConfirmationAlert
             open={!!isDeleting}
-            title='Tem certeza que deseja deletar esse treino?'
-            description='Essa ação não pode ser desfeita.'
             onCompleted={handleDeleteWorkout}
             onCancel={() => setIsDeleting(null)}
+            title={t('deleteWorkoutTitle')}
+            description={t('deleteWorkoutDescription')}
+            cancelButtonTitle={t('deleteWorkoutCancel')}
+            confirmButtonTitle={t('deleteWorkoutConfirm')}
           />
 
           <PreviewModal
@@ -183,7 +188,7 @@ export default function DashboardPage() {
             <div className='mx-auto w-full max-w-7xl space-y-6'>
               <Header streakCount={streakCount} />
 
-              <p className='text-sm text-muted-foreground'>Seus Treinos</p>
+              <p className='text-sm text-muted-foreground'>{t('title')}</p>
 
               <div className='grid gap-6 md:grid-cols-[300px_1fr]'>
                 <section className='rounded-lg border bg-card p-4 shadow-sm w-full min-h-64'>
@@ -206,7 +211,7 @@ export default function DashboardPage() {
                       className='w-full dark:bg-transparent bg-transparent flex items-center justify-center gap-2 cursor-pointer'
                     >
                       <PlusIcon size={18} />
-                      Adicionar Treino
+                      {t('addWorkout')}
                     </Button>
                   </div>
                 </section>

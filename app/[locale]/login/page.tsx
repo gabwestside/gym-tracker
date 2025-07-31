@@ -13,6 +13,7 @@ import { toast } from 'sonner'
 export default function LoginPage() {
   const t = useTranslations('login')
   const router = useRouter()
+  
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)

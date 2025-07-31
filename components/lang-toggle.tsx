@@ -1,8 +1,5 @@
 'use client'
 
-import * as React from 'react'
-import { Languages } from 'lucide-react'
-
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -11,8 +8,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { usePathname, useRouter } from '@/i18n/navigation'
+import { Languages } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
-export function LanguageToggle() {
+export const LanguageToggle = () => {
+  const t = useTranslations('langToggle')
+
   const pathname = usePathname()
   const router = useRouter()
 
@@ -28,12 +29,12 @@ export function LanguageToggle() {
         <DropdownMenuItem
           onClick={() => router.push(pathname, { locale: 'en' })}
         >
-          English
+          {t('en')}
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => router.push(pathname, { locale: 'pt' })}
         >
-          Português
+          {t('pt')}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

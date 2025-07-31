@@ -14,13 +14,17 @@ import {
 import { User } from '@/lib/types'
 import { SquareArrowUpLeft } from 'lucide-react'
 import * as React from 'react'
-import { LanguageToggle } from './theme-toggler'
+import { LanguageToggle } from '@/components/lang-toggle'
+import Link from 'next/link'
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   user: User
 }
 
-export function AppSidebar({ user, ...props }: AppSidebarProps) {
+export function AppSidebar({
+  user,
+  ...props
+}: AppSidebarProps) {
   return (
     <Sidebar collapsible='offcanvas' {...props}>
       <SidebarHeader>
@@ -30,10 +34,10 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
               asChild
               className='data-[slot=sidebar-menu-button]:!p-1.5'
             >
-              <a href='https://github.com/gabwestside' target='_blank'>
+              <Link href='https://github.com/gabwestside' target='_blank'>
                 <SquareArrowUpLeft className='!size-5' />
                 <span className='text-base font-semibold'>Wstside Inc.</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
             <LanguageToggle />
           </SidebarMenuItem>
@@ -41,15 +45,13 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
       </SidebarHeader>
       <SidebarContent>
         {/* <NavMain
-          items={
-            [
-              {
-                title: 'Dashboard',
-                url: '#',
-                icon: LayoutDashboard,
-              },
-            ]
-          }
+          items={[
+            {
+              title: 'Dashboard',
+              url: '#',
+              icon: LayoutDashboard,
+            },
+          ]}
         /> */}
         <NavSecondary className='mt-auto' />
       </SidebarContent>
