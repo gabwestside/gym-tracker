@@ -7,8 +7,10 @@ import { toast } from 'sonner'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import Link from 'next/link'
 
-const baseUrl = `${process.env.NEXT_PUBLIC_APP_URL}` || 'gabweside-gym-tracker.vercel.app/'
+const baseUrl =
+  `${process.env.NEXT_PUBLIC_APP_URL}` || 'gabweside-gym-tracker.vercel.app/'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -67,9 +69,9 @@ export default function RegisterPage() {
 
         <p className='mt-4 text-sm text-center'>
           Já tem conta?{' '}
-          <a href='/login' className='text-blue-600 hover:underline'>
+          <Link href='/login' className='text-blue-600 hover:underline'>
             Faça seu login
-          </a>
+          </Link>
         </p>
       </Card>
     </main>
