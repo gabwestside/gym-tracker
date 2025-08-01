@@ -88,5 +88,18 @@
     "loading": "Uploading image...",
     "error": "An unknown error occurred.",
     "sendError": "Upload failed: "
+  },
+  "preview": {
+    "shareText": "Today's workout was awesome, right? 🔥{{br}}The photo turned out great! 😎{{br}}{{br}}How about sharing it and motivating more people to work out? 💪",
+    "image": "Workout image",
+    "copy": "Copy Text",
+    "share": "Share",
+    "successCopy": "Text copied to clipboard!"
+  },
+  "workoutCard": {
+    "noWorkouts": "No workouts logged yet.",
+    "altImage": "Workout photo",
+    "editWorkout": "Edit workout",
+    "deleteWorkout": "Delete workout"
   }
 }

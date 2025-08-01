@@ -88,5 +88,18 @@
     "loading": "Enviando imagem...",
     "error": "Um erro desconhecido ocorreu.",
     "sendError": "Falha no envio: "
+  },
+  "preview": {
+    "shareText": "O treino de hoje foi brabo ein? 🔥{{br}}A foto ficou muito boa! 😎{{br}}{{br}}Que tal compartilhar e motivar mais pessoas a treinar? 💪",
+    "image": "Imagem do treino",
+    "copy": "Copiar Texto",
+    "share": "Compartilhar",
+    "successCopy": "Texto copiado para a área de transferência!"
+  },
+  "workoutCard": {
+    "noWorkouts": "Nenhum treino registrado ainda.",
+    "altImage": "Foto do treino",
+    "editWorkout": "Editar treino",
+    "deleteWorkout": "Excluir treino"
   }
 }

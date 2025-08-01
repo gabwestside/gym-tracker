@@ -45,6 +45,37 @@ export default function DashboardPage() {
 
   const userId = session?.user?.id
 
+  const fetchWorkouts = useCallback(
+    async (userId: string) => {
+      setLoading(true)
+      const { data, error } = await supabase
+        .from('workouts')
+        .select('*')
+        .eq('user_id', userId)
+        .order('date', { ascending: false })
+
+      if (error) {
+        toast.error(t('workoutsError'))
+        setLoading(false)
+        return
+      }
+
+      setWorkouts(data || [])
+      setHasWorkoutDays(
+        data?.map((w) =>
+          dayjs(normalizeToLocal(w.date)).format('YYYY-MM-DD')
+        ) || []
+      )
+
+      const dates = data.map((w) => normalizeToLocal(w.date))
+      const streak = calculateStreak(dates)
+      setStreakCount(streak)
+
+      setLoading(false)
+    },
+    [t]
+  )
+
   const initializeSession = useCallback(async () => {
     const { data } = await supabase.auth.getSession()
     const currentSession = data.session
@@ -59,38 +90,11 @@ export default function DashboardPage() {
       avatar: currentSession.user.user_metadata.avatar_url || '',
     })
     await fetchWorkouts(currentSession.user.id)
-  }, [router])
+  }, [fetchWorkouts, router])
 
   useEffect(() => {
     initializeSession()
   }, [initializeSession])
-
-  const fetchWorkouts = async (userId: string) => {
-    setLoading(true)
-    const { data, error } = await supabase
-      .from('workouts')
-      .select('*')
-      .eq('user_id', userId)
-      .order('date', { ascending: false })
-
-    if (error) {
-      toast.error(t('workoutsError'))
-      setLoading(false)
-      return
-    }
-
-    setWorkouts(data || [])
-    setHasWorkoutDays(
-      data?.map((w) => dayjs(normalizeToLocal(w.date)).format('YYYY-MM-DD')) ||
-        []
-    )
-
-    const dates = data.map((w) => normalizeToLocal(w.date))
-    const streak = calculateStreak(dates)
-    setStreakCount(streak)
-
-    setLoading(false)
-  }
 
   const handleAddWorkout = () => {
     setIsEditing(null)
