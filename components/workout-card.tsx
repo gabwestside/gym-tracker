@@ -1,7 +1,6 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { normalizeToLocal } from '@/lib/date-pattern'
 import { Workout } from '@/lib/types'
 import dayjs from 'dayjs'
 import 'dayjs/locale/pt-br'
@@ -9,6 +8,7 @@ import 'dayjs/locale/en'
 import { Pencil, Share2Icon, Trash } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import Image from 'next/image'
+import { normalizeToLocal } from '@/lib/date-pattern'
 
 interface WorkoutCardPros extends React.HTMLAttributes<HTMLDivElement> {
   workouts: Workout[]
@@ -18,36 +18,30 @@ interface WorkoutCardPros extends React.HTMLAttributes<HTMLDivElement> {
   onPreview: (workout: Workout) => void
 }
 
-export function WorkoutCard({
+export const WorkoutCard = ({
   workouts,
   onDelete,
   onEdit,
   onShare,
   onPreview,
-}: WorkoutCardPros) {
+}: WorkoutCardPros) => {
   const t = useTranslations('workoutCard')
   const locale = useLocale()
+  
+  const formattedDate = (date: string): string => {
+    const normalizedLocale = locale === 'pt' ? 'pt-BR' : locale
+    const dayJsDate = dayjs(normalizeToLocal(date)).locale(normalizedLocale)
 
-  const formattedDate = (date: string) => {
-    const dayJsDate = dayjs(normalizeToLocal(date)).locale(locale)
-
-    if (locale === 'en') {
-      dayJsDate.locale('en')
-      return dayJsDate.format('MMMM D ')
-    }
-    dayJsDate.locale('pt-br')
-    return dayJsDate.format('D [de] MMMM')
+    return normalizedLocale === 'en'
+      ? dayJsDate.format('MMMM D')
+      : dayJsDate.format('D [de] MMMM')
   }
 
-  const formattedTime = (time: string) => {
-    return (
-      time &&
-      ` ${
-        locale === 'en'
-          ? 'at ' + dayjs(`2000-01-01 ${time}`).format('h:mm A')
-          : 'às ' + time.slice(0, 5) + 'h'
-      }`
-    )
+  const formattedTime = (time: string): string => {
+    if (!time) return ''
+    return locale === 'en'
+      ? ` at ${dayjs(`2000-01-01T${time}`).format('h:mm A')}`
+      : ` às ${time.slice(0, 5)}h`
   }
 
   return workouts.length === 0 ? (

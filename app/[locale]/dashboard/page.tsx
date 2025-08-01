@@ -195,7 +195,7 @@ export default function DashboardPage() {
               <p className='text-sm text-muted-foreground'>{t('title')}</p>
 
               <div className='grid gap-6 md:grid-cols-[300px_1fr]'>
-                <section className='rounded-lg border bg-card p-4 shadow-sm w-full min-h-64'>
+                <section className='rounded-lg border bg-card p-4 shadow-sm w-full min-h-[28rem]'>
                   <WorkoutCalendar hasWorkoutDays={hasWorkoutDays} />
                 </section>
 
