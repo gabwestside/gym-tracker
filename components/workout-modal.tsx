@@ -16,6 +16,7 @@ import { supabase } from '@/lib/supabase'
 import { Workout } from '@/lib/types'
 import { motion } from 'framer-motion'
 import { X } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
@@ -29,14 +30,16 @@ interface WorkoutModalProps {
   userId: string
 }
 
-export function WorkoutModal({
+export const WorkoutModal = ({
   trigger,
   onCompleted,
   workoutToEdit,
   open,
   onOpenChange,
   userId,
-}: WorkoutModalProps) {
+}: WorkoutModalProps) => {
+  const t = useTranslations('workoutModal')
+
   const [date, setDate] = useState('')
   const [notes, setNotes] = useState('')
   const [imageUrl, setImageUrl] = useState('')
@@ -45,8 +48,8 @@ export function WorkoutModal({
   const [imageLoading, setImageLoading] = useState(false)
 
   const modalTitle = useMemo(
-    () => (workoutToEdit ? 'Editar Treino' : 'Registrar Treino'),
-    [workoutToEdit]
+    () => (workoutToEdit ? t('editTitle') : t('addTitle')),
+    [t, workoutToEdit]
   )
 
   useEffect(() => {
@@ -68,17 +71,17 @@ export function WorkoutModal({
 
   const handleSubmit = async () => {
     if (!date.trim()) {
-      toast.error('A data do treino é obrigatória.')
+      toast.error(t('date'))
       return
     }
 
     if (!time.trim()) {
-      toast.error('A hora do treino é obrigatória.')
+      toast.error(t('time'))
       return
     }
 
     if (!notes.trim()) {
-      toast.error('É importante dizer o que vc treinou hoje.')
+      toast.error(t('notes'))
       return
     }
 
@@ -103,14 +106,14 @@ export function WorkoutModal({
 
       if (result.error) throw result.error
 
-      toast.success(
-        `Treino ${workoutToEdit ? 'atualizado' : 'registrado'} com sucesso!`
-      )
+      const messageKey = workoutToEdit ? 'updatedSuccess' : 'registeredSuccess'
+      toast.success(t(messageKey))
+
       onCompleted()
       onOpenChange(false)
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Algo de errado.'
-      toast.error(`Erro: ${message}`)
+      const message = error instanceof Error ? error.message : t('generic')
+      toast.error(t('withMessage', { message }))
     } finally {
       setLoading(false)
     }
@@ -149,12 +152,14 @@ export function WorkoutModal({
             type='time'
             value={time}
             onChange={(e) => setTime(e.target.value)}
+            required
           />
 
           <Textarea
-            placeholder='O que você treinou hoje?'
+            placeholder={t('description')}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
+            required
           />
 
           <UploadButton onUpload={handleImageUpload} />
@@ -164,7 +169,7 @@ export function WorkoutModal({
               {imageLoading && <Skeleton className='w-full h-48 rounded-lg' />}
               <Image
                 src={imageUrl}
-                alt={modalTitle || 'Imagem do treino'}
+                alt={modalTitle || 'Workout photo'}
                 className={`w-full rounded-lg shadow-md max-h-48 object-cover transition-opacity duration-500 ${
                   imageLoading ? 'opacity-0' : 'opacity-100'
                 }`}
@@ -176,7 +181,7 @@ export function WorkoutModal({
               <button
                 onClick={() => setImageUrl('')}
                 className='absolute top-2 right-2 bg-black/60 p-1 rounded-full text-white hover:bg-black/80'
-                title='Remover imagem'
+                title={t('deleteImageTitle')}
               >
                 <X size={16} />
               </button>
@@ -191,18 +196,18 @@ export function WorkoutModal({
             >
               {loading
                 ? workoutToEdit
-                  ? 'Atualizando...'
-                  : 'Registrando...'
+                  ? t('loadEditButton')
+                  : t('loadAddButton')
                 : workoutToEdit
-                ? 'Atualizar Treino'
-                : 'Registrar Treino'}
+                ? t('editButton')
+                : t('addButton')}
             </Button>
             <Button
               variant='outline'
               onClick={() => onOpenChange(false)}
               className='w-full'
             >
-              Cancelar
+              {t('cancel')}
             </Button>
           </div>
         </motion.div>

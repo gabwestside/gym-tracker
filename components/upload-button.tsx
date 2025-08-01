@@ -5,12 +5,15 @@ import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { v4 as uuidv4 } from 'uuid'
 import { supabase } from '@/lib/supabase'
+import { useTranslations } from 'next-intl'
 
 interface UploadButtonProps {
   onUpload: (url: string, loading: boolean) => void
 }
 
-export function UploadButton({ onUpload }: UploadButtonProps) {
+export const UploadButton = ({ onUpload }: UploadButtonProps) => {
+  const t = useTranslations('uploadButton')
+  
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [uploading, setUploading] = useState(false)
 
@@ -19,7 +22,7 @@ export function UploadButton({ onUpload }: UploadButtonProps) {
     if (!file) return
 
     setUploading(true)
-    toast.info('Enviando imagem...')
+    toast.info(t('loading'))
     onUpload('', true)
 
     try {
@@ -37,14 +40,14 @@ export function UploadButton({ onUpload }: UploadButtonProps) {
         .from('workout-photos')
         .getPublicUrl(filePath)
 
-      if (!data?.publicUrl) throw new Error('Falha ao obter a URL pública')
+      if (!data?.publicUrl) throw new Error(t('publicError'))
 
-      toast.success('Imagem enviada com sucesso!')
+      toast.success(t('success'))
       onUpload(data.publicUrl, false)
     } catch (error: unknown) {
       const errorMessage =
-        error instanceof Error ? error.message : 'Um erro desconhecido ocorreu.'
-      toast.error(`Falha no envio: ${errorMessage}`)
+        error instanceof Error ? error.message : t('error')
+      toast.error(`${t('sendError')}${errorMessage}`)
       onUpload('', false)
     } finally {
       setUploading(false)
@@ -66,7 +69,7 @@ export function UploadButton({ onUpload }: UploadButtonProps) {
         disabled={uploading}
         variant='outline'
       >
-        {uploading ? 'Enviando...' : 'Enviar Imagem'}
+        {uploading ? t('loadButton') : t('button')}
       </Button>
     </>
   )

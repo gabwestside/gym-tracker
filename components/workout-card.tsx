@@ -5,10 +5,10 @@ import { normalizeToLocal } from '@/lib/date-pattern'
 import { Workout } from '@/lib/types'
 import dayjs from 'dayjs'
 import 'dayjs/locale/pt-br'
+import 'dayjs/locale/en'
 import { Pencil, Share2Icon, Trash } from 'lucide-react'
+import { useLocale, useTranslations } from 'next-intl'
 import Image from 'next/image'
-
-dayjs.locale('pt-br')
 
 interface WorkoutCardPros extends React.HTMLAttributes<HTMLDivElement> {
   workouts: Workout[]
@@ -25,11 +25,34 @@ export function WorkoutCard({
   onShare,
   onPreview,
 }: WorkoutCardPros) {
+  const t = useTranslations('workoutCard')
+  const locale = useLocale()
+
+  const formattedDate = (date: string) => {
+    const dayJsDate = dayjs(normalizeToLocal(date)).locale(locale)
+
+    if (locale === 'en') {
+      dayJsDate.locale('en')
+      return dayJsDate.format('MMMM D ')
+    }
+    dayJsDate.locale('pt-br')
+    return dayJsDate.format('D [de] MMMM')
+  }
+
+  const formattedTime = (time: string) => {
+    return (
+      time &&
+      ` ${
+        locale === 'en'
+          ? 'at ' + dayjs(`2000-01-01 ${time}`).format('h:mm A')
+          : 'às ' + time.slice(0, 5) + 'h'
+      }`
+    )
+  }
+
   return workouts.length === 0 ? (
     <div className='rounded-lg border p-4 shadow-sm bg-card'>
-      <p className='p-4 text-base mb-2 text-center'>
-        Nenhum treino registrado ainda.
-      </p>
+      <p className='p-4 text-base mb-2 text-center'>{t('noWorkouts')}</p>
     </div>
   ) : (
     <>
@@ -46,15 +69,15 @@ export function WorkoutCard({
               </span>
             )}
             <span className='text-sm text-muted-foreground'>
-              {dayjs(normalizeToLocal(workout.date)).format('D [de] MMMM')}
-              {workout.time && ` às ${workout.time.slice(0, 5)}`}
+              {formattedDate(workout.date)}
+              {formattedTime(workout.time)}
             </span>
           </div>
 
           {workout.image_url && (
             <Image
               src={workout.image_url}
-              alt='Foto do treino'
+              alt={t('altImage')}
               className='rounded-md w-full max-h-72 object-cover hover:scale-[1.015] transition-transform shadow-sm cursor-pointer'
               width={800}
               height={600}
@@ -67,7 +90,7 @@ export function WorkoutCard({
               variant='ghost'
               size='icon'
               onClick={() => onEdit(workout)}
-              title='Editar treino'
+              title={t('editWorkout')}
             >
               <Pencil className='w-4 h-4' />
             </Button>
@@ -75,7 +98,7 @@ export function WorkoutCard({
               variant='ghost'
               size='icon'
               onClick={() => onDelete(workout)}
-              title='Excluir treino'
+              title={t('deleteWorkout')}
             >
               <Trash className='w-4 h-4 text-red-500' />
             </Button>

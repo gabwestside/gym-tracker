@@ -2,10 +2,15 @@
 
 import { Switch } from '@/components/ui/switch'
 import { Moon, Sun } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { useTheme } from 'next-themes'
 import { HTMLAttributes } from 'react'
 
-export const ThemeToggle = (props: HTMLAttributes<HTMLButtonElement>) => {
+export const ThemeToggle = ({
+  ...props
+}: HTMLAttributes<HTMLButtonElement>) => {
+  const t = useTranslations('themeToggle')
+
   const { theme, setTheme } = useTheme()
   const isDark = theme === 'dark'
 
@@ -18,7 +23,7 @@ export const ThemeToggle = (props: HTMLAttributes<HTMLButtonElement>) => {
     >
       {isDark ? <Sun size={18} /> : <Moon size={18} />}
       <span className='sr-only'>Toggle theme</span>
-      {isDark ? 'Claro' : 'Escuro'}
+      {isDark ? t('light') : t('dark')}
       <Switch checked={isDark} className='ml-auto cursor-pointer' />
     </button>
   )

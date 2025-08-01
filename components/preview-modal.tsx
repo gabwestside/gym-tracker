@@ -8,6 +8,7 @@ import { Workout } from '@/lib/types'
 import { DialogTitle } from '@radix-ui/react-dialog'
 import { Share, Copy } from 'lucide-react'
 import { shareWorkout } from '@/lib/share-workout'
+import { useTranslations } from 'next-intl'
 
 interface PreviewModalProps {
   open: boolean
@@ -15,22 +16,21 @@ interface PreviewModalProps {
   workout: Workout | null
 }
 
-export function PreviewModal({
+export const PreviewModal = ({
   open,
   onOpenChange,
   workout,
-}: PreviewModalProps) {
+}: PreviewModalProps) => {
+  const t = useTranslations('preview')
+
   if (!workout) return null
 
-  const formattedText = `O treino de hoje foi brabo ein? 🔥
-    A foto ficou muito boa! 😎
-
-    Que tal compartilhar e motivar mais pessoas a treinar? 💪
-    `.trim()
+  const rawText = t('shareText')
+  const formattedText = rawText.replaceAll('{{br}}', '\n').trim()
 
   const handleCopy = () => {
     navigator.clipboard.writeText(formattedText)
-    toast.success('Texto copiado para a área de transferência!')
+    toast.success(t('successCopy'))
   }
 
   const handleShare = async () => {
@@ -43,7 +43,7 @@ export function PreviewModal({
       <DialogContent className='max-w-md space-y-4 text-center'>
         <Image
           src={workout.image_url}
-          alt='Imagem do treino'
+          alt={t('image')}
           width={200}
           height={200}
           className='mx-auto rounded-lg object-cover shadow-md'
@@ -53,11 +53,11 @@ export function PreviewModal({
 
         <div className='flex gap-2 justify-center'>
           <Button onClick={handleCopy} variant='outline'>
-            <Copy /> Copiar Texto
+            <Copy /> {t('copy')}
           </Button>
           <Button onClick={handleShare}>
             <Share />
-            Compartilhar
+            {t('share')}
           </Button>
         </div>
       </DialogContent>

@@ -14,26 +14,32 @@ import {
 import { User } from '@/lib/types'
 import { SquareArrowUpLeft } from 'lucide-react'
 import * as React from 'react'
+import { LanguageToggle } from '@/components/lang-toggle'
+import Link from 'next/link'
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   user: User
 }
 
-export function AppSidebar({ user, ...props }: AppSidebarProps) {
+export function AppSidebar({
+  user,
+  ...props
+}: AppSidebarProps) {
   return (
     <Sidebar collapsible='offcanvas' {...props}>
       <SidebarHeader>
         <SidebarMenu>
-          <SidebarMenuItem>
+          <SidebarMenuItem className='flex'>
             <SidebarMenuButton
               asChild
               className='data-[slot=sidebar-menu-button]:!p-1.5'
             >
-              <a href='https://github.com/gabwestside' target='_blank'>
+              <Link href='https://github.com/gabwestside' target='_blank'>
                 <SquareArrowUpLeft className='!size-5' />
                 <span className='text-base font-semibold'>Wstside Inc.</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
+            <LanguageToggle />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>

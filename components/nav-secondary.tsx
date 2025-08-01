@@ -1,16 +1,14 @@
 'use client'
 
-import * as React from 'react'
 import { ThemeToggle } from '@/components/theme-toggle'
 import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
 } from '@/components/ui/sidebar'
+import * as React from 'react'
 
-export function NavSecondary({
-  ...props
-}: React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
+export const NavSecondary = ({ ...props }: React.ComponentPropsWithoutRef<typeof SidebarGroup>) => {
   return (
     <SidebarGroup {...props}>
       <SidebarGroupContent>

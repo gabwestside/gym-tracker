@@ -1,17 +1,22 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
-import { toast } from 'sonner'
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Link } from '@/i18n/navigation'
+import { supabase } from '@/lib/supabase'
+import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
-const baseUrl = `${process.env.NEXT_PUBLIC_APP_URL}` || 'gabweside-gym-tracker.vercel.app/'
+const baseUrl =
+  `${process.env.NEXT_PUBLIC_APP_URL}` || 'gabweside-gym-tracker.vercel.app/'
 
 export default function RegisterPage() {
+  const t = useTranslations('register')
   const router = useRouter()
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -28,9 +33,9 @@ export default function RegisterPage() {
     })
 
     if (error) {
-      toast.error('Erro ao registrar: ' + error.message)
+      toast.error(t('registerError') + error.message)
     } else {
-      toast.success('Conta criada! Verifique seu e-mail.')
+      toast.success(t('registerSuccess'))
       router.push('/verify')
     }
 
@@ -40,18 +45,18 @@ export default function RegisterPage() {
   return (
     <main className='flex min-h-screen items-center justify-center bg-background text-foreground'>
       <Card className='w-full max-w-sm p-6 shadow-xl'>
-        <h1 className='mb-4 text-center text-2xl font-bold'>Criar conta</h1>
+        <h1 className='mb-4 text-center text-2xl font-bold'>{t('title')}</h1>
 
         <Input
           type='email'
-          placeholder='Seu e-mail'
+          placeholder={t('email')}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className='mb-2'
         />
         <Input
           type='password'
-          placeholder='Crie uma senha'
+          placeholder={t('password')}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className='mb-4'
@@ -62,14 +67,14 @@ export default function RegisterPage() {
           disabled={loading}
           className='w-full bg-green-600 hover:bg-green-700'
         >
-          {loading ? 'Registrando...' : 'Criar conta'}
+          {loading ? t('loadButton') : t('button')}
         </Button>
 
         <p className='mt-4 text-sm text-center'>
-          Já tem conta?{' '}
-          <a href='/login' className='text-blue-600 hover:underline'>
-            Faça seu login
-          </a>
+          {t('alreadyHaveAccount')}
+          <Link href='/login' className='text-blue-600 hover:underline'>
+            {t('login')}
+          </Link>
         </p>
       </Card>
     </main>

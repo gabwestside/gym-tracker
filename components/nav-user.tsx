@@ -17,20 +17,23 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 import { EllipsisVertical, LogOut, User } from 'lucide-react'
-import { LogoutAlert } from './logout-alert'
+import { LogoutAlert } from '@/components/logout-alert'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import { useTranslations } from 'next-intl'
 
-export function NavUser({
-  user,
-}: {
+interface NavUserProps {
   user: {
     name: string
     email: string
     avatar: string
   }
-}) {
+}
+
+export const NavUser = ({ user }: NavUserProps) => {
+  const t = useTranslations('navUser')
+
   const { isMobile } = useSidebar()
 
   const [isLogout, setIsLogout] = useState(false)
@@ -95,13 +98,13 @@ export function NavUser({
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <User />
-                Conta
+                {t('account')}
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => setIsLogout(true)}>
               <LogOut />
-              Sair
+              {t('logout')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
