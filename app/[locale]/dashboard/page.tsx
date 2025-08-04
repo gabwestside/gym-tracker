@@ -76,11 +76,17 @@ export default function DashboardPage() {
     if (!currentSession) return router.push('/login')
     if (!currentSession.user.email_confirmed_at) return router.push('/verify')
 
+    const { data: userInfos } = await supabase
+      .from('profiles')
+      .select('name, avatar_url')
+      .eq('id', data.session.user.id)
+      .single()
+
     setSession(currentSession)
     setUser({
-      name: currentSession.user.user_metadata.name || '',
+      name: userInfos?.name || '',
       email: currentSession.user.email || '',
-      avatar: currentSession.user.user_metadata.avatar_url || '',
+      avatar: userInfos?.avatar_url || '',
     })
     await fetchWorkouts(currentSession.user.id)
   }, [fetchWorkouts, router])
