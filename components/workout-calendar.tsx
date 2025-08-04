@@ -5,7 +5,7 @@ import { PreviewModal } from '@/components/preview-modal'
 import { Badge } from '@/components/ui/badge'
 import { Calendar } from '@/components/ui/calendar'
 import { Workout } from '@/lib/types'
-import { endOfDay, isAfter, isSameDay, parseISO } from 'date-fns'
+import { format, isAfter, parseISO, startOfDay } from 'date-fns'
 import { enUS, ptBR } from 'date-fns/locale'
 import { useLocale, useTranslations } from 'next-intl'
 import { useState } from 'react'
@@ -21,45 +21,51 @@ export const WorkoutCalendar = ({ workouts }: WorkoutCalendarProps) => {
   const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null)
   const [showEmptyModal, setShowEmptyModal] = useState(false)
 
-  const doneWorkoutDays = workouts.map((w) => parseISO(w.inserted_at))
+  const today = startOfDay(new Date())
 
-  const calendarLocale = locale === 'en' ? enUS : ptBR
+  const workoutDatesMap = new Map<string, Workout>()
+  const workoutDays: Date[] = []
 
-  const handleDayClick = (date: Date) => {
-    const now = new Date()
-    if (isAfter(date, endOfDay(now))) return
+  workouts.forEach((w) => {
+    const date = parseISO(w.inserted_at)
+    const key = format(date, 'yyyy-MM-dd')
+    workoutDatesMap.set(key, w)
+    workoutDays.push(date)
+  })
 
-    const foundWorkout = workouts.find((w) =>
-      isSameDay(parseISO(w.inserted_at), date)
-    )
+  const handleDayClick = (day: Date) => {
+    if (isAfter(day, today)) return
 
-    if (foundWorkout) {
-      setSelectedWorkout(foundWorkout)
+    const formattedDay = format(day, 'yyyy-MM-dd')
+    const workout = workoutDatesMap.get(formattedDay)
+
+    if (workout) {
+      setSelectedWorkout(workout)
     } else {
       setShowEmptyModal(true)
     }
   }
 
   return (
-    <div className='p-4 mx-auto space-y-4'>
+    <div className='p-4'>
       <Calendar
-        locale={calendarLocale}
-        mode='multiple'
-        selected={doneWorkoutDays}
+        locale={locale === 'en' ? enUS : ptBR}
+        mode='single'
         showOutsideDays
+        selected={undefined}
         onDayClick={handleDayClick}
-        disabled={(date) => isAfter(date, endOfDay(new Date()))}
-        modifiers={{ selected: doneWorkoutDays }}
+        disabled={(date) => isAfter(date, today)}
+        modifiers={{ workoutDays }}
         modifiersClassNames={{
-          selected: 'bg-green-500 text-white rounded-full !hover:bg-green-500',
+          workoutDays: 'bg-green-500 text-white rounded-lg',
         }}
-        className='w-full rounded-lg bg-transparent'
+        className='w-full rounded-lg bg-transparent mb-2 overflow-auto'
       />
 
       <div className='flex items-center justify-center gap-4 text-sm'>
         <Badge
           variant='outline'
-          className='bg-foreground text-white dark:text-black border-accent'
+          className='bg-green-500 text-white border-accent'
         >
           {t('doneWorkout')}
         </Badge>
