@@ -101,5 +101,13 @@
     "altImage": "Workout photo",
     "editWorkout": "Edit workout",
     "deleteWorkout": "Delete workout"
+  },
+  "workoutCalendar": {
+    "doneWorkout": "Workout done",
+    "noRecords": "No Record"
+  },
+  "emptyModal": {
+    "title": "No workout found",
+    "description": "There are no records available for this date."
   }
 }
