@@ -4,6 +4,7 @@ export type Workout = {
   time: string
   note: string
   image_url: string
+  inserted_at: string
 }
 
 export type User = {

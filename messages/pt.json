@@ -101,5 +101,13 @@
     "altImage": "Foto do treino",
     "editWorkout": "Editar treino",
     "deleteWorkout": "Excluir treino"
+  },
+  "workoutCalendar": {
+    "doneWorkout": "Treino realizado",
+    "noRecords": "Sem registro"
+  },
+  "emptyModal": {
+    "title": "Nenhum treino encontrado",
+    "description": "Não há registros disponíveis para esta data."
   }
 }

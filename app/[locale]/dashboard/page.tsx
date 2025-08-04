@@ -16,7 +16,6 @@ import { calculateStreak } from '@/lib/streak-count'
 import { supabase } from '@/lib/supabase'
 import { User, Workout } from '@/lib/types'
 import { Session } from '@supabase/supabase-js'
-import dayjs from 'dayjs'
 import { PlusIcon } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -28,7 +27,6 @@ export default function DashboardPage() {
   const router = useRouter()
 
   const [workouts, setWorkouts] = useState<Workout[]>([])
-  const [hasWorkoutDays, setHasWorkoutDays] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const [session, setSession] = useState<Session | null>(null)
   const [isEditing, setIsEditing] = useState<Workout | null>(null)
@@ -61,11 +59,6 @@ export default function DashboardPage() {
       }
 
       setWorkouts(data || [])
-      setHasWorkoutDays(
-        data?.map((w) =>
-          dayjs(normalizeToLocal(w.date)).format('YYYY-MM-DD')
-        ) || []
-      )
 
       const dates = data.map((w) => normalizeToLocal(w.date))
       const streak = calculateStreak(dates)
@@ -195,8 +188,8 @@ export default function DashboardPage() {
               <p className='text-sm text-muted-foreground'>{t('title')}</p>
 
               <div className='grid gap-6 md:grid-cols-[300px_1fr]'>
-                <section className='rounded-lg border bg-card p-4 shadow-sm w-full min-h-[28rem]'>
-                  <WorkoutCalendar hasWorkoutDays={hasWorkoutDays} />
+                <section className='rounded-lg border bg-card shadow-sm w-full'>
+                  <WorkoutCalendar workouts={workouts} />
                 </section>
 
                 <section className='flex flex-col gap-4'>
