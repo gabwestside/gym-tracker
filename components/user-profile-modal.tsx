@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { supabase } from '@/lib/supabase'
 import { Loader2 } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -24,6 +25,8 @@ export const UserProfileModal = ({
   open,
   onOpenChange,
 }: UserProfileModalProps) => {
+  const t = useTranslations('userProfileModal')
+
   const [userId, setUserId] = useState<string | null>(null)
   const [email, setEmail] = useState<string>('')
   const [name, setName] = useState<string>('')
@@ -41,7 +44,7 @@ export const UserProfileModal = ({
       } = await supabase.auth.getUser()
 
       if (authError || !user) {
-        toast.error('Erro ao buscar dados do usuário.')
+        toast.error(t('userError'))
         setInitialLoading(false)
         return
       }
@@ -56,7 +59,7 @@ export const UserProfileModal = ({
         .single()
 
       if (profileError || !data) {
-        toast.error('Erro ao carregar perfil do usuário.')
+        toast.error(t('profileError'))
         setInitialLoading(false)
         return
       }
@@ -67,7 +70,7 @@ export const UserProfileModal = ({
     }
 
     if (open) fetchUserProfile()
-  }, [open])
+  }, [open, t])
 
   const handleSave = async () => {
     if (!userId) return
@@ -80,9 +83,9 @@ export const UserProfileModal = ({
     setLoading(false)
 
     if (error) {
-      toast.error('Erro ao atualizar perfil.') // TODO: Make intl in this flow
+      toast.error(t('uploadError'))
     } else {
-      toast.success('Perfil atualizado com sucesso!')
+      toast.success(t('uploadSuccess'))
       onOpenChange(false)
     }
   }
@@ -91,7 +94,7 @@ export const UserProfileModal = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Editar Perfil</DialogTitle>
+          <DialogTitle>{t('title')}</DialogTitle>
         </DialogHeader>
 
         {initialLoading ? (
@@ -107,12 +110,12 @@ export const UserProfileModal = ({
               username={name}
             />
             <div>
-              <Label htmlFor='email'>E-mail</Label>
+              <Label htmlFor='email'>{t('email')}</Label>
               <Input id='email' value={email} disabled />
             </div>
 
             <div>
-              <Label htmlFor='name'>Nome</Label>
+              <Label htmlFor='name'>{t('name')}</Label>
               <Input
                 id='name'
                 value={name}
@@ -121,7 +124,7 @@ export const UserProfileModal = ({
             </div>
 
             <Button onClick={handleSave} disabled={loading} className='w-full'>
-              {loading ? 'Salvando...' : 'Salvar alterações'}
+              {loading ? t('loadButton') : t('button')}
             </Button>
           </div>
         )}

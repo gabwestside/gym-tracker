@@ -13,6 +13,8 @@
   },
   "register": {
     "title": "Registre sua conta",
+    "name": "Seu nome",
+    "lastName": "Seu sobrenome",
     "email": "Seu e-mail",
     "password": "Sua senha",
     "confirmPassword": "Confirme sua senha",
@@ -109,5 +111,29 @@
   "emptyModal": {
     "title": "Nenhum treino encontrado",
     "description": "Não há registros disponíveis para esta data."
+  },
+  "avatarUploader": {
+    "button": "Alterar Avatar",
+    "sendError": "Erro ao fazer upload:",
+    "uploadError": "Erro ao atualizar perfil:"
+  },
+  "userProfileModal": {
+    "title": "Editar Perfil",
+    "email": "E-mail",
+    "name": "Nome",
+    "button": "Salvar alterações",
+    "loadButton": "Salvando...",
+    "uploadError": "Erro ao atualizar perfil:",
+    "uploadSuccess": "Perfil atualizado com sucesso!",
+    "profileError": "Erro ao carregar perfil do usuário.",
+    "userError": "Erro ao buscar dados do usuário."
+  },
+  "shareWorkout": {
+    "message": "Foi dia de {note}, realizado no dia {date} às {time}.\n\nFicou motivado? Bora treinar também 💪🏋️‍♀️\n{url}",
+    "unsupported": "Seu navegador não suporta compartilhamento.",
+    "imageUnsupported": "Seu navegador não suporta compartilhamento com imagem.",
+    "title": "Confira meu treino 💪",
+    "error": "Erro ao compartilhar o treino: ",
+    "file": "Treino"
   }
 }

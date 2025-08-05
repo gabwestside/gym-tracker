@@ -7,6 +7,7 @@ import { Loader2 } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { normalizeInitials } from '@/lib/utils'
+import { useTranslations } from 'next-intl'
 
 interface AvatarUploaderProps {
   userId: string
@@ -19,8 +20,10 @@ export const AvatarUploader = ({
   userId,
   avatarUrl,
   onAvatarUpdate,
-  username
+  username,
 }: AvatarUploaderProps) => {
+  const t = useTranslations('avatarUploader')
+
   const [uploading, setUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -38,7 +41,7 @@ export const AvatarUploader = ({
       .upload(filePath, file, { upsert: true })
 
     if (uploadError) {
-      console.error('Erro ao fazer upload:', uploadError.message) // TODO: Make intl in this flow
+      console.error(t('sendError'), uploadError.message)
       setUploading(false)
       return
     }
@@ -54,7 +57,7 @@ export const AvatarUploader = ({
       .eq('id', userId)
 
     if (updateError) {
-      console.error('Erro ao atualizar perfil:', updateError.message)
+      console.error(t('updateError'), updateError.message)
     } else {
       onAvatarUpdate(publicUrl)
     }
@@ -87,7 +90,7 @@ export const AvatarUploader = ({
         {uploading ? (
           <Loader2 className='animate-spin w-4 h-4 mr-2' />
         ) : (
-          'Alterar Avatar'
+          t('button')
         )}
       </Button>
     </div>
