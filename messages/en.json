@@ -13,6 +13,8 @@
   },
   "register": {
     "title": "Register your account",
+    "name": "Your name",
+    "lastName": "Your last name",
     "email": "Your email",
     "password": "Your password",
     "confirmPassword": "Confirm your password",
@@ -109,5 +111,29 @@
   "emptyModal": {
     "title": "No workout found",
     "description": "There are no records available for this date."
+  },
+  "avatarUploader": {
+    "button": "Change Avatar",
+    "sendError": "Upload error:",
+    "uploadError": "Error updating profile:"
+  },
+  "userProfileModal": {
+    "title": "Edit Profile",
+    "email": "E-mail",
+    "name": "Name",
+    "button": "Save changes",
+    "loadButton": "Saving...",
+    "uploadError": "Error updating profile:",
+    "uploadSuccess": "Profile updated successfully!",
+    "profileError": "Error loading user profile.",
+    "userError": "Error fetching user data."
+  },
+  "shareWorkout": {
+    "message": "It was {note} day, completed on {date} at {time}.\n\nFeeling inspired? Let’s hit the gym too 💪🏋️‍♀️\n{url}",
+    "unsupported": "Your browser does not support sharing.",
+    "imageUnsupported": "Your browser does not support sharing with images.",
+    "title": "Check out my workout 💪",
+    "error": "Error while sharing the workout: ",
+    "file": "Workout"
   }
 }

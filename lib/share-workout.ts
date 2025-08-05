@@ -16,7 +16,7 @@ export const shareWorkout = async (workout: Workout) => {
   const formattedTime = time?.slice(0, 5)
 
   const text =
-    `Foi dia de ${note.toLowerCase()}, realizado no dia ${formattedDate} às ${formattedTime}. \n\nFicou motivado? Bora treinar também 💪🏋️‍♀️\n${baseUrl}`.trim()
+    `Foi dia de ${note.toLowerCase()}, realizado no dia ${formattedDate} às ${formattedTime}. \n\nFicou motivado? Bora treinar também 💪🏋️‍♀️\n${baseUrl}`.trim() // TODO: Make intl in this flow
 
   if (!navigator.share) {
     toast.warning('Seu navegador não suporta compartilhamento.')
