@@ -188,7 +188,7 @@ export default function DashboardPage() {
           {loading ? (
             <Loading />
           ) : (
-            <div className='mx-auto w-full max-w-7xl space-y-6'>
+            <div className='mx-auto w-full max-w-3xl space-y-6'>
               <Header streakCount={streakCount} />
 
               <p className='text-sm text-muted-foreground'>{t('title')}</p>
