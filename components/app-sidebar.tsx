@@ -34,7 +34,7 @@ export function AppSidebar({
               asChild
               className='data-[slot=sidebar-menu-button]:!p-1.5'
             >
-              <Link href='https://github.com/gabwestside' target='_blank'>
+              <Link href='https://gabwestside.vercel.app/' target='_blank'>
                 <SquareArrowUpLeft className='!size-5' />
                 <span className='text-base font-semibold'>Wstside Inc.</span>
               </Link>
